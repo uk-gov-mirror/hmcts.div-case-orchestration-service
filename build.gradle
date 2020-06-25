@@ -396,6 +396,13 @@ task functional(type: Test, description: 'Runs the functional tests.', group: 'V
     finalizedBy aggregate
 }
 
+test {
+    // listen to events in the test execution lifecycle
+    beforeTest { descriptor ->
+        logger.lifecycle("Running test: " + descriptor)
+    }
+}
+
 pitest {
     targetClasses = ['uk.gov.hmcts.reform.divorce.orchestration.*']
     excludedClasses = ['uk.gov.hmcts.reform.divorce.orchestration.config.*',

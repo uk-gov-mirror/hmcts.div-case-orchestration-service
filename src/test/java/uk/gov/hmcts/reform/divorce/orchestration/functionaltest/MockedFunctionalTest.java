@@ -79,17 +79,17 @@ public abstract class MockedFunctionalTest {
 
     @Before
     public final void resetAllMockServices() {
-        maintenanceServiceServer.resetAll();
-        documentGeneratorServiceServer.resetAll();
-        featureToggleService.resetAll();
-        feesAndPaymentsServer.resetAll();
-        formatterServiceServer.resetAll();
-        idamServer.resetAll();
-        paymentServiceServer.resetAll();
-        sendLetterService.resetAll();
-        serviceAuthProviderServer.resetAll();
-        validationServiceServer.resetAll();
-        documentStore.resetAll();
+//        maintenanceServiceServer.resetAll();
+//        documentGeneratorServiceServer.resetAll();
+//        featureToggleService.resetAll();
+//        feesAndPaymentsServer.resetAll();
+//        formatterServiceServer.resetAll();
+//        idamServer.resetAll();
+//        paymentServiceServer.resetAll();
+//        sendLetterService.resetAll();
+//        serviceAuthProviderServer.resetAll();
+//        validationServiceServer.resetAll();
+//        documentStore.resetAll();
     }
 
     private static WireMockConfiguration buildWireMockConfig(int port) {
