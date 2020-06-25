@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import uk.gov.hmcts.reform.divorce.orchestration.domain.model.ccd.CaseDetails;
@@ -243,7 +242,6 @@ public class LinkRespondentIdamITest extends IdamTestSupport {
             .andExpect(status().isOk());
     }
 
-    @DirtiesContext
     @Test
     public void givenAllGoesWell_whenLinkCoRespondent_thenProceedAsExpected() throws Exception {
         Map<String, Object> caseData = new HashMap<>();
@@ -303,7 +301,6 @@ public class LinkRespondentIdamITest extends IdamTestSupport {
             .andExpect(status().isNotFound());
     }
 
-    @DirtiesContext
     @Test
     public void givenNonStandardLinking_whenLinkRespondent_thenProceedAsExpected() throws Exception {
         stubSignInForCaseworker();
