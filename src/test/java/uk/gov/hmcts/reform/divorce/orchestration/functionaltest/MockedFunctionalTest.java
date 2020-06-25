@@ -4,6 +4,7 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import com.github.tomakehurst.wiremock.matching.EqualToPattern;
+import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -75,6 +76,21 @@ public abstract class MockedFunctionalTest {
 
     @ClassRule
     public static WireMockClassRule documentStore = new WireMockClassRule(buildWireMockConfig(4020));
+
+    @Before
+    public final void resetAllMockServices() {
+        maintenanceServiceServer.resetAll();
+        documentGeneratorServiceServer.resetAll();
+        featureToggleService.resetAll();
+        feesAndPaymentsServer.resetAll();
+        formatterServiceServer.resetAll();
+        idamServer.resetAll();
+        paymentServiceServer.resetAll();
+        sendLetterService.resetAll();
+        serviceAuthProviderServer.resetAll();
+        validationServiceServer.resetAll();
+        documentStore.resetAll();
+    }
 
     private static WireMockConfiguration buildWireMockConfig(int port) {
         return WireMockSpring

@@ -30,7 +30,7 @@ import static uk.gov.hmcts.reform.divorce.orchestration.TestConstants.TEST_CASE_
 import static uk.gov.hmcts.reform.divorce.orchestration.domain.model.OrchestrationConstants.ID;
 import static uk.gov.hmcts.reform.divorce.orchestration.testutil.ObjectMapperTestUtil.convertObjectToJsonString;
 
-public class PaymentUpdateITest extends IdamTestSupport {
+public class PaymentUpdateITest extends IdamTestSupport {//TODO - this fails when I run it as part of a series
 
     private static final String CASE_ID = "1234567890";
     private static final String EVENT_ID = "paymentMade";

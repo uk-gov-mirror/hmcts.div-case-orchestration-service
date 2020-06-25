@@ -31,7 +31,7 @@ import static uk.gov.hmcts.reform.divorce.orchestration.domain.model.BulkCaseCon
 import static uk.gov.hmcts.reform.divorce.orchestration.domain.model.OrchestrationConstants.UPDATE_BULK_DN_PRONOUNCEMENT_DETAILS_EVENT;
 import static uk.gov.hmcts.reform.divorce.orchestration.testutil.ResourceLoader.loadResourceAsString;
 
-public class UpdateBulkCaseDnPronouncementDateITest extends IdamTestSupport {
+public class UpdateBulkCaseDnPronouncementDateITest extends IdamTestSupport {//TODO - fails run as part of a series
 
     private static final String API_URL = "/bulk/pronounce/submit";
 

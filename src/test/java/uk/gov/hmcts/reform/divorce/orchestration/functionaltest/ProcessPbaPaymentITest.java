@@ -57,7 +57,7 @@ import static uk.gov.hmcts.reform.divorce.orchestration.domain.model.Orchestrati
 import static uk.gov.hmcts.reform.divorce.orchestration.domain.model.OrchestrationConstants.STATEMENT_OF_TRUTH;
 import static uk.gov.hmcts.reform.divorce.orchestration.testutil.ObjectMapperTestUtil.convertObjectToJsonString;
 
-public class ProcessPbaPaymentITest extends MockedFunctionalTest {
+public class ProcessPbaPaymentITest extends MockedFunctionalTest {//TODO - this fails as part of a series
     private static final String API_URL = "/process-pba-payment";
     private static final String PAYMENTS_CREDIT_ACCOUNT_CONTEXT_PATH = "/credit-account-payments";
     private static final String SERVICE_AUTH_CONTEXT_PATH = "/lease";

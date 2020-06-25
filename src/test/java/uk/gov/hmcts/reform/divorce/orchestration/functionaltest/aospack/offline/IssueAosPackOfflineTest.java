@@ -61,7 +61,7 @@ import static uk.gov.hmcts.reform.divorce.orchestration.domain.model.parties.Div
 import static uk.gov.hmcts.reform.divorce.orchestration.testutil.ObjectMapperTestUtil.convertObjectToJsonString;
 import static uk.gov.hmcts.reform.divorce.orchestration.testutil.ObjectMapperTestUtil.getJsonFromResourceFile;
 
-public class IssueAosPackOfflineTest extends MockedFunctionalTest {
+public class IssueAosPackOfflineTest extends MockedFunctionalTest {//TODO - fails when run as part of a series
 
     private static final String API_URL = "/issue-aos-pack-offline/parties/%s";
 
@@ -82,7 +82,7 @@ public class IssueAosPackOfflineTest extends MockedFunctionalTest {
 
     @Before
     public void setUp() {
-        documentGeneratorServiceServer.resetAll();
+        documentGeneratorServiceServer.resetAll();//TODO - make a method for this in mockedFunctionalTest
         formatterServiceServer.resetAll();
         sendLetterService.resetAll();
         documentStore.resetAll();

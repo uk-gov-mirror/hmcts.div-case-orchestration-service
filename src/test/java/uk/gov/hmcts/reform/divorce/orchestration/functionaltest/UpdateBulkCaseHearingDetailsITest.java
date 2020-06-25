@@ -42,7 +42,7 @@ import static uk.gov.hmcts.reform.divorce.orchestration.domain.model.Orchestrati
 import static uk.gov.hmcts.reform.divorce.orchestration.domain.model.OrchestrationConstants.UPDATE_COURT_HEARING_DETAILS_EVENT;
 import static uk.gov.hmcts.reform.divorce.orchestration.testutil.ResourceLoader.loadResourceAsString;
 
-public class UpdateBulkCaseHearingDetailsITest extends IdamTestSupport {
+public class UpdateBulkCaseHearingDetailsITest extends IdamTestSupport {//TODO - fails when run as part of a series
 
     private static final String API_URL = "/bulk/schedule/listing";
 

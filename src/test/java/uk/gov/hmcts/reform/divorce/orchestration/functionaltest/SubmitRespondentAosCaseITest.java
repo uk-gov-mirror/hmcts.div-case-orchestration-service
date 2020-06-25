@@ -49,7 +49,7 @@ import static uk.gov.hmcts.reform.divorce.orchestration.domain.model.facts.Divor
 import static uk.gov.hmcts.reform.divorce.orchestration.domain.model.facts.DivorceFacts.SEPARATION_TWO_YEARS;
 import static uk.gov.hmcts.reform.divorce.orchestration.testutil.ObjectMapperTestUtil.convertObjectToJsonString;
 
-public class SubmitRespondentAosCaseITest extends MockedFunctionalTest {
+public class SubmitRespondentAosCaseITest extends MockedFunctionalTest {//TODO - fails when mocks are reset
     private static final String API_URL = String.format("/submit-aos/%s", TEST_CASE_ID);
 
     private static final String FORMAT_TO_AOS_CASE_CONTEXT_PATH = "/caseformatter/version/1/to-aos-submit-format";

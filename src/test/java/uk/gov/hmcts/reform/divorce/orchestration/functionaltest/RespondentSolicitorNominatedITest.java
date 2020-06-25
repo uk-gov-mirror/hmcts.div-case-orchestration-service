@@ -36,7 +36,7 @@ import static uk.gov.hmcts.reform.divorce.orchestration.domain.model.Orchestrati
 import static uk.gov.hmcts.reform.divorce.orchestration.testutil.ObjectMapperTestUtil.convertObjectToJsonString;
 import static uk.gov.hmcts.reform.divorce.orchestration.testutil.ObjectMapperTestUtil.getJsonFromResourceFile;
 
-public class RespondentSolicitorNominatedITest extends IdamTestSupport {
+public class RespondentSolicitorNominatedITest extends IdamTestSupport {//TODO - fails as part of a series
 
     private static final String API_URL = "/aos-solicitor-nominated";
     private static final String AOS_SOL_NOMINATED_JSON = "/jsonExamples/payloads/aosSolicitorNominated.json";

@@ -35,7 +35,7 @@ import static uk.gov.hmcts.reform.divorce.orchestration.domain.model.Orchestrati
 import static uk.gov.hmcts.reform.divorce.orchestration.testutil.ObjectMapperTestUtil.convertObjectToJsonString;
 import static uk.gov.hmcts.reform.divorce.orchestration.testutil.ResourceLoader.loadResourceAsString;
 
-public class ProcessBulkCaseAcceptedCasesITest extends IdamTestSupport {
+public class ProcessBulkCaseAcceptedCasesITest extends IdamTestSupport {//TODO - this fails when it's run as part of a series
 
     private static final String API_URL = "/bulk/remove";
     private static final String CMS_UPDATE_CASE = "/casemaintenance/version/1/updateCase/%s/unlinkBulkCaseReference";
