@@ -81,7 +81,8 @@ public abstract class MockedFunctionalTest {
         return WireMockSpring
             .options()
             .port(port)
-            .extensions(new ConnectionCloseExtension());
+            .extensions(new ConnectionCloseExtension())//TODO - ?
+            ;
     }
 
     protected void stubSendLetterService(HttpStatus status) {

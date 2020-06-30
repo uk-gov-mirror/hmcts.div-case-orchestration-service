@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.divorce.orchestration.functionaltest;
 
 import com.google.common.collect.ImmutableMap;
+import org.junit.After;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -167,6 +168,11 @@ public class DnPronouncedNotificationTest extends MockedFunctionalTest {
 
     @Captor
     private ArgumentCaptor<List<GeneratedDocumentInfo>> documentsToPrintCaptor;
+
+    @After
+    public void tearDown() throws Exception {
+        serviceAuthProviderServer.resetAll();
+    }
 
     @Test
     public void givenCaseDataWithNoPaysCosts_whenDnPronounced_thenSendGenericNotifications() throws Exception {

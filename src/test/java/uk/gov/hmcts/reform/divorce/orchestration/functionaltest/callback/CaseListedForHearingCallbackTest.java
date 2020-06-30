@@ -2,6 +2,7 @@
 package uk.gov.hmcts.reform.divorce.orchestration.functionaltest.callback;
 
 import com.google.common.collect.ImmutableMap;
+import org.junit.After;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -249,6 +250,11 @@ public class CaseListedForHearingCallbackTest extends MockedFunctionalTest {
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest());
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        serviceAuthProviderServer.resetAll();
     }
 
 }

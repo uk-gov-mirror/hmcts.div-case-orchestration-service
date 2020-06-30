@@ -36,6 +36,7 @@ import static uk.gov.hmcts.reform.divorce.orchestration.domain.model.Orchestrati
 import static uk.gov.hmcts.reform.divorce.orchestration.testutil.ObjectMapperTestUtil.convertObjectToJsonString;
 
 public class RetrieveDraftITest extends MockedFunctionalTest {
+
     private static final String API_URL = "/draftsapi/version/1";
     private static final String CMS_CONTEXT_PATH = "/casemaintenance/version/1/retrieveCase";
     private static final String CMS_UPDATE_CASE_PATH =
@@ -163,6 +164,10 @@ public class RetrieveDraftITest extends MockedFunctionalTest {
             .andExpect(content().string(hasJsonPath("$.court", CourtsMatcher.isExpectedCourtsList())));
         maintenanceServiceServer.verify(2, getRequestedFor(urlEqualTo(CMS_CONTEXT_PATH)));
         maintenanceServiceServer.verify(1, postRequestedFor(urlEqualTo(CMS_UPDATE_CASE_PATH)));
+
+        //TODO- temporary
+        serviceAuthProviderServer.resetAll();
+        //TODO - this currently needs a mock it doesn't set - port 4011
     }
 
     private void stubCmsServerEndpoint(String path, HttpStatus status, String body, HttpMethod method) {

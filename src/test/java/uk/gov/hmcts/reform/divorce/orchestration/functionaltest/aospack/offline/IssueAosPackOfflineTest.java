@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.divorce.orchestration.functionaltest.aospack.offline;
 
 import org.json.JSONArray;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +83,11 @@ public class IssueAosPackOfflineTest extends MockedFunctionalTest {
         stubSendLetterService(OK);
         stubServiceAuthProvider(OK, TEST_SERVICE_AUTH_TOKEN);
         stubDMStore(TEST_DOCUMENT_ID_IN_EXAMPLE_PAYLOAD, "existingDocumentContent".getBytes());
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        serviceAuthProviderServer.resetAll();
     }
 
     @Test

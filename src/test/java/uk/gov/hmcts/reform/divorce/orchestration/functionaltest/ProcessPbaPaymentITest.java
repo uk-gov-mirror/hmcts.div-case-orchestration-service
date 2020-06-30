@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.divorce.orchestration.functionaltest;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.matching.EqualToPattern;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -151,6 +152,12 @@ public class ProcessPbaPaymentITest extends MockedFunctionalTest {
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().json(convertObjectToJsonString(expected)));
+        //TODO - this currently needs a mock it doesn't set - port 4011
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        serviceAuthProviderServer.resetAll();
     }
 
     @Test

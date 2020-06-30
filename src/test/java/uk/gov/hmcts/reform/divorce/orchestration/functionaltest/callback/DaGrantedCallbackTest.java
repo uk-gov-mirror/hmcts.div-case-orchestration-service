@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.divorce.orchestration.functionaltest.callback;
 
 import com.google.common.collect.ImmutableMap;
+import org.junit.After;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -133,6 +134,11 @@ public class DaGrantedCallbackTest extends MockedFunctionalTest {
             .andExpect(content().json(convertObjectToJsonString(expectedResponse)));
         verify(mockEmailService).sendEmailAndReturnExceptionIfFails(eq(TEST_PETITIONER_EMAIL), anyString(), anyMap(), anyString());
         verify(mockEmailService).sendEmailAndReturnExceptionIfFails(eq(TEST_RESPONDENT_EMAIL), anyString(), anyMap(), anyString());
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        serviceAuthProviderServer.resetAll();
     }
 
     @Test

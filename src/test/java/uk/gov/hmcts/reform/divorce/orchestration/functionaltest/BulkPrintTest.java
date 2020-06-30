@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.divorce.orchestration.functionaltest;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,11 @@ public class BulkPrintTest extends IdamTestSupport {
         testDocumentId = UUID.randomUUID().toString();
         stubDMStore(testDocumentId, "testContent".getBytes());
         stubServiceAuthProvider(HttpStatus.OK, TEST_SERVICE_AUTH_TOKEN);
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        serviceAuthProviderServer.resetAll();
     }
 
     @Test

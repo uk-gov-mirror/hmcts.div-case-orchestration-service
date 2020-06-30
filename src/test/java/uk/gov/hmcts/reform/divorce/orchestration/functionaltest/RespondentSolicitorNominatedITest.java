@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.divorce.orchestration.functionaltest;
 
 import com.google.common.collect.ImmutableMap;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,6 +98,11 @@ public class RespondentSolicitorNominatedITest extends IdamTestSupport {
                 isJson(),
                 hasJsonPath("$.errors", nullValue())
             )));
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        serviceAuthProviderServer.resetAll();
     }
 
 }
