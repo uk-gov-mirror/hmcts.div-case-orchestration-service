@@ -194,9 +194,7 @@ public class RetrieveDraftITest extends MockedFunctionalTest {
 
 
     private void stubAuthServerEndpoint() {//TODO - strong candidate
-        Algorithm algorithm = mock(Algorithm.class);
-        String body = JWT.create()
-            .withExpiresAt(Date.from(ZonedDateTime.now().plusHours(1).toInstant())).sign(algorithm);
+        String body = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkxvdWlzIEdyaWZmaW4iLCJpYXQiOjE1MTYyMzkwMjIsImV4cCI6MTU2NjU5MTQyMn0.hBh9tSgfFz9ghjvsztU2NOyi1J_s7Hp0KCYlLprRSbY";
         serviceAuthProviderServer.stubFor(WireMock.post(AUTH_SERVICE_PATH)
             .willReturn(aResponse()
                 .withStatus(HttpStatus.OK.value())

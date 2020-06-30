@@ -46,44 +46,37 @@ public abstract class MockedFunctionalTest {
     private static final String SERVICE_AUTH_CONTEXT_PATH = "/lease";
 
     @ClassRule
-    public static WireMockClassRule maintenanceServiceServer = new WireMockClassRule(buildWireMockConfig(4010));
+    public static WireMockClassRule maintenanceServiceServer = new WireMockClassRule(4010);
 
     @ClassRule
-    public static WireMockClassRule documentGeneratorServiceServer = new WireMockClassRule(buildWireMockConfig(4007));
+    public static WireMockClassRule documentGeneratorServiceServer = new WireMockClassRule(4007);
 
     @ClassRule
-    public static WireMockClassRule featureToggleService = new WireMockClassRule(buildWireMockConfig(4028));
+    public static WireMockClassRule featureToggleService = new WireMockClassRule(4028);
 
     @ClassRule
-    public static WireMockClassRule feesAndPaymentsServer = new WireMockClassRule(buildWireMockConfig(4009));
+    public static WireMockClassRule feesAndPaymentsServer = new WireMockClassRule(4009);
 
     @ClassRule
-    public static WireMockClassRule formatterServiceServer = new WireMockClassRule(buildWireMockConfig(4011));
+    public static WireMockClassRule formatterServiceServer = new WireMockClassRule(4011);
 
     @ClassRule
-    public static WireMockClassRule idamServer = new WireMockClassRule(buildWireMockConfig(4503));
+    public static WireMockClassRule idamServer = new WireMockClassRule(4503);
 
     @ClassRule
-    public static WireMockClassRule paymentServiceServer = new WireMockClassRule(buildWireMockConfig(9190));
+    public static WireMockClassRule paymentServiceServer = new WireMockClassRule(9190);
 
     @ClassRule
-    public static WireMockClassRule sendLetterService = new WireMockClassRule(buildWireMockConfig(4021));
+    public static WireMockClassRule sendLetterService = new WireMockClassRule(4021);
 
     @ClassRule
-    public static WireMockClassRule serviceAuthProviderServer = new WireMockClassRule(buildWireMockConfig(4504));
+    public static WireMockClassRule serviceAuthProviderServer = new WireMockClassRule(4504);
 
     @ClassRule
-    public static WireMockClassRule validationServiceServer = new WireMockClassRule(buildWireMockConfig(4008));
+    public static WireMockClassRule validationServiceServer = new WireMockClassRule(4008);
 
     @ClassRule
-    public static WireMockClassRule documentStore = new WireMockClassRule(buildWireMockConfig(4020));
-
-    private static WireMockConfiguration buildWireMockConfig(int port) {
-        return WireMockSpring
-            .options()
-            .port(port)
-            .extensions(new ConnectionCloseExtension());//TODO - don't think I need this
-    }
+    public static WireMockClassRule documentStore = new WireMockClassRule(4020);
 
     protected void stubSendLetterService(HttpStatus status) {
         sendLetterService.stubFor(WireMock.post("/letters")
@@ -177,7 +170,7 @@ public abstract class MockedFunctionalTest {
     }
 
     @After
-    public final void tearDown() throws Exception {q
+    public final void tearDown() throws Exception {
         serviceAuthProviderServer.resetAll();
     }
 
