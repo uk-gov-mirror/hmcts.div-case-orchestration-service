@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.google.common.collect.Maps;
+import org.junit.After;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
@@ -164,10 +165,12 @@ public class RetrieveDraftITest extends MockedFunctionalTest {
             .andExpect(content().string(hasJsonPath("$.court", CourtsMatcher.isExpectedCourtsList())));
         maintenanceServiceServer.verify(2, getRequestedFor(urlEqualTo(CMS_CONTEXT_PATH)));
         maintenanceServiceServer.verify(1, postRequestedFor(urlEqualTo(CMS_UPDATE_CASE_PATH)));
-
-        //TODO- temporary
-        serviceAuthProviderServer.resetAll();
         //TODO - this currently needs a mock it doesn't set - port 4011
+    }
+
+    @After
+    public void tearDown() throws Exception {
+//        serviceAuthProviderServer.resetAll();
     }
 
     private void stubCmsServerEndpoint(String path, HttpStatus status, String body, HttpMethod method) {
@@ -199,11 +202,11 @@ public class RetrieveDraftITest extends MockedFunctionalTest {
         Algorithm algorithm = mock(Algorithm.class);
         String body = JWT.create()
             .withExpiresAt(Date.from(ZonedDateTime.now().plusHours(1).toInstant())).sign(algorithm);
-        serviceAuthProviderServer.stubFor(WireMock.post(AUTH_SERVICE_PATH)
-            .willReturn(aResponse()
-                .withStatus(HttpStatus.OK.value())
-                .withHeader(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE)
-                .withBody(body)));
+//        serviceAuthProviderServer.stubFor(WireMock.post(AUTH_SERVICE_PATH)
+//            .willReturn(aResponse()
+//                .withStatus(HttpStatus.OK.value())
+//                .withHeader(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE)
+//                .withBody(body)));
     }
 
     private void stubPaymentServerEndpoint(String body) {

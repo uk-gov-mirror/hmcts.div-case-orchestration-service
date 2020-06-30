@@ -42,7 +42,7 @@ public class FetchPrintDocsFromDmStore implements Task<Map<String, Object>> {
 
     private static final String SERVICE_AUTHORIZATION = "ServiceAuthorization";
 
-    private AuthTokenGenerator authTokenGenerator;
+    private AuthTokenGenerator authTokenGenerator;//TODO - This is caching response - write a quick test to prove it
 
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;

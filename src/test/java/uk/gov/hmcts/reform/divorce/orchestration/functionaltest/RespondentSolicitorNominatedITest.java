@@ -102,7 +102,7 @@ public class RespondentSolicitorNominatedITest extends IdamTestSupport {
 
     @After
     public void tearDown() throws Exception {
-        serviceAuthProviderServer.resetAll();
+//        serviceAuthProviderServer.resetAll();
     }
 
 }

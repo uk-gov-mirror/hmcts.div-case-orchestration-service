@@ -171,7 +171,7 @@ public class DnPronouncedNotificationTest extends MockedFunctionalTest {
 
     @After
     public void tearDown() throws Exception {
-        serviceAuthProviderServer.resetAll();
+//        serviceAuthProviderServer.resetAll();
     }
 
     @Test
