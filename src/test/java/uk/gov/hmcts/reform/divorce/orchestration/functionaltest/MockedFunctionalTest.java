@@ -1,15 +1,10 @@
 package uk.gov.hmcts.reform.divorce.orchestration.functionaltest;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.matching.EqualToPattern;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.ClassRule;
-import org.junit.Rule;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -49,67 +44,44 @@ public abstract class MockedFunctionalTest {
     protected static final String GENERATE_DOCUMENT_CONTEXT_PATH = "/version/1/generatePDF";
     private static final String SERVICE_AUTH_CONTEXT_PATH = "/lease";
 
-    //    @ClassRule
-//    @Rule
-    public static WireMockClassRule maintenanceServiceServer = new WireMockClassRule(4010);
+    @ClassRule
+    public static WireMockClassRule maintenanceServiceServer = new WireMockClassRule(buildWireMockConfig(4010));
 
-    //    @ClassRule
-//    @Rule
-    public static WireMockClassRule documentGeneratorServiceServer = new WireMockClassRule(4007);
+    @ClassRule
+    public static WireMockClassRule documentGeneratorServiceServer = new WireMockClassRule(buildWireMockConfig(4007));
 
-    //    @ClassRule
-//    @Rule
-    public static WireMockClassRule featureToggleService = new WireMockClassRule(4028);
+    @ClassRule
+    public static WireMockClassRule featureToggleService = new WireMockClassRule(buildWireMockConfig(4028));
 
-    //    @ClassRule
-//    @Rule
-    public static WireMockClassRule feesAndPaymentsServer = new WireMockClassRule(4009);
+    @ClassRule
+    public static WireMockClassRule feesAndPaymentsServer = new WireMockClassRule(buildWireMockConfig(4009));
 
-    //    @ClassRule
-//    @Rule
-    public static WireMockClassRule formatterServiceServer = new WireMockClassRule(4011);
+    @ClassRule
+    public static WireMockClassRule formatterServiceServer = new WireMockClassRule(buildWireMockConfig(4011));
 
-    //    @ClassRule
-//    @Rule
-    public static WireMockClassRule idamServer = new WireMockClassRule(4503);
+    @ClassRule
+    public static WireMockClassRule idamServer = new WireMockClassRule(buildWireMockConfig(4503));
 
-    //    @ClassRule
-//    @Rule
-    public static WireMockClassRule paymentServiceServer = new WireMockClassRule(9190);
+    @ClassRule
+    public static WireMockClassRule paymentServiceServer = new WireMockClassRule(buildWireMockConfig(9190));
 
-    //    @ClassRule
-//    @Rule
-    public static WireMockClassRule sendLetterService = new WireMockClassRule(4021);
+    @ClassRule
+    public static WireMockClassRule sendLetterService = new WireMockClassRule(buildWireMockConfig(4021));
 
-//    @Rule
-//    public WireMockRule serviceAuthProviderServer = new WireMockRule(4504);
+    @ClassRule
+    public static WireMockClassRule serviceAuthProviderServer = new WireMockClassRule(buildWireMockConfig(4504));
 
-//    @Rule
-//    public WireMockClassRule serviceAuthProviderServer = serviceAuthProviderServer2;
+    @ClassRule
+    public static WireMockClassRule validationServiceServer = new WireMockClassRule(buildWireMockConfig(4008));
 
-    //    @ClassRule
-//    @Rule
-    public static WireMockClassRule validationServiceServer = new WireMockClassRule(4008);
+    @ClassRule
+    public static WireMockClassRule documentStore = new WireMockClassRule(buildWireMockConfig(4020));
 
-    //    @ClassRule
-//    @Rule
-    public static WireMockClassRule documentStore = new WireMockClassRule(4020);
-
-    private WireMockServer serviceAuthProviderServer;
-
-    @Before
-    public final void test() throws Exception {
-        serviceAuthProviderServer = new WireMockServer(4504);
-        serviceAuthProviderServer.start();
-    }
-
-    @After
-    public void finish() {
-        serviceAuthProviderServer.stop();
-    }
-
-    public void resetMock() {
-        serviceAuthProviderServer.resetAll();
+    private static WireMockConfiguration buildWireMockConfig(int port) {
+        return WireMockSpring
+            .options()
+            .port(port)
+            .extensions(new ConnectionCloseExtension());//TODO - don't think I need this
     }
 
     protected void stubSendLetterService(HttpStatus status) {

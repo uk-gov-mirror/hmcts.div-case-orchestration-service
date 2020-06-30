@@ -170,7 +170,7 @@ public class RetrieveDraftITest extends MockedFunctionalTest {
 
     @After
     public void tearDown() throws Exception {
-//        serviceAuthProviderServer.resetAll();
+        serviceAuthProviderServer.resetAll();
     }
 
     private void stubCmsServerEndpoint(String path, HttpStatus status, String body, HttpMethod method) {

@@ -254,7 +254,7 @@ public class CaseListedForHearingCallbackTest extends MockedFunctionalTest {
 
     @After
     public void tearDown() throws Exception {
-//        serviceAuthProviderServer.resetAll();
+        serviceAuthProviderServer.resetAll();
     }
 
 }

@@ -157,7 +157,7 @@ public class ProcessPbaPaymentITest extends MockedFunctionalTest {
 
     @After
     public void tearDown() throws Exception {
-//        serviceAuthProviderServer.resetAll();
+        serviceAuthProviderServer.resetAll();
     }
 
     @Test

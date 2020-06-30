@@ -33,9 +33,7 @@ public class TestConstants {
     public static final String TEST_SOLICITOR_FIRM_NAME = "test.solicitor.firm";
     public static final String TEST_SOLICITOR_COMPANY = "Awesome Solicitors LLP";
     public static final String TEST_SOLICITOR_REFERENCE = "test.solicitor.reference";
-    public static final String TEST_SERVICE_AUTH_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
-            + ".eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ"
-            + ".SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";//TODO - could I change this to something more readable, or does it need to be JWT valid?
+    public static final String TEST_SERVICE_AUTH_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlBldGVyIEdyaWZmaW4iLCJpYXQiOjE1MTYyMzkwMjIsImV4cCI6MTU2NjU5MTQyMn0.49IlIqUnUYNx0_8lmAXcZ9epzpNHJS9CpRvHFeESDvg";//TODO - could I change this to something more readable, or does it need to be JWT valid?
     public static final String TEST_SOLICITOR_NAME = "Solicitor name";
     public static final String TEST_SOLICITOR_EMAIL = "testSolicitor@email.com";
     public static final String TEST_RESP_SOLICITOR_NAME = "Respondent Solicitor name";

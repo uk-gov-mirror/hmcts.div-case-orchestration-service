@@ -78,7 +78,7 @@ public class IssueAosPackOfflineTest extends MockedFunctionalTest {
 
     @Before
     public void setUp() {
-        resetAllMockServices();
+//        resetAllMockServices();
 
         stubSendLetterService(OK);
         stubServiceAuthProvider(OK, TEST_SERVICE_AUTH_TOKEN);
@@ -87,7 +87,7 @@ public class IssueAosPackOfflineTest extends MockedFunctionalTest {
 
     @After
     public void tearDown() throws Exception {
-//        serviceAuthProviderServer.resetAll();
+        serviceAuthProviderServer.resetAll();
     }
 
     @Test

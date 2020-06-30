@@ -48,7 +48,8 @@ public class RespondentSolicitorNominatedITest extends IdamTestSupport {
 
     @Before
     public void setUp() throws Exception {
-        resetAllMockServices();
+//        resetAllMockServices();
+        serviceAuthProviderServer.resetAll();
     }
 
     @Test
@@ -102,7 +103,7 @@ public class RespondentSolicitorNominatedITest extends IdamTestSupport {
 
     @After
     public void tearDown() throws Exception {
-//        serviceAuthProviderServer.resetAll();
+        serviceAuthProviderServer.resetAll();
     }
 
 }
