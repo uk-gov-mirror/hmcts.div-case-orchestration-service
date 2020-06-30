@@ -35,7 +35,7 @@ public class TestConstants {
     public static final String TEST_SOLICITOR_REFERENCE = "test.solicitor.reference";
     public static final String TEST_SERVICE_AUTH_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
             + ".eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ"
-            + ".SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+            + ".SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";//TODO - could I change this to something more readable, or does it need to be JWT valid?
     public static final String TEST_SOLICITOR_NAME = "Solicitor name";
     public static final String TEST_SOLICITOR_EMAIL = "testSolicitor@email.com";
     public static final String TEST_RESP_SOLICITOR_NAME = "Respondent Solicitor name";

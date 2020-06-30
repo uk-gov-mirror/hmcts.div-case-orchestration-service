@@ -21,10 +21,12 @@ import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.task.Task;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.task.TaskContext;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 import static uk.gov.hmcts.reform.divorce.orchestration.domain.model.OrchestrationConstants.CASE_DETAILS_JSON_KEY;
 import static uk.gov.hmcts.reform.divorce.orchestration.domain.model.OrchestrationConstants.D8DOCUMENTS_GENERATED;
@@ -60,19 +62,14 @@ public class FetchPrintDocsFromDmStore implements Task<Map<String, Object>> {
         return caseData;
     }
 
-    /**
-     * I'm not using object mapper here to keep it consistent with rest of code, when we migrate the formatter
-     * service to as module dependency this method could be simplified.
-     */
-    @SuppressWarnings("unchecked")
     private Map<String, GeneratedDocumentInfo> extractGeneratedDocumentList(Map<String, Object> caseData) {
-        List<CollectionMember<Document>> documentList = ofNullable(caseData.get(D8DOCUMENTS_GENERATED))
+        List<CollectionMember<Document>> generatedDocumentList = ofNullable(caseData.get(D8DOCUMENTS_GENERATED))
             .map(i -> objectMapper.convertValue(i, new TypeReference<List<CollectionMember<Document>>>() {
             }))
-            .orElse(new ArrayList<>());
-        Map<String, GeneratedDocumentInfo> generatedDocumentInfoList = new HashMap<>();
+            .orElse(emptyList());
 
-        for (CollectionMember<Document> document : documentList) {
+        Map<String, GeneratedDocumentInfo> generatedDocumentInfoList = new HashMap<>();
+        for (CollectionMember<Document> document : generatedDocumentList) {
             Document value = document.getValue();
             String documentType = value.getDocumentType();
             DocumentLink documentLink = value.getDocumentLink();
@@ -91,11 +88,12 @@ public class FetchPrintDocsFromDmStore implements Task<Map<String, Object>> {
         return generatedDocumentInfoList;
     }
 
-    private void populateDocumentBytes(TaskContext context, Map<String, GeneratedDocumentInfo> generatedDocumentInfos) {
+    private void populateDocumentBytes(TaskContext context, Map<String, GeneratedDocumentInfo> generatedDocumentsInfo) {
         CaseDetails caseDetails = context.getTransientObject(CASE_DETAILS_JSON_KEY);
-        for (GeneratedDocumentInfo generatedDocumentInfo : generatedDocumentInfos.values()) {
+        for (GeneratedDocumentInfo generatedDocumentInfo : generatedDocumentsInfo.values()) {
             HttpHeaders headers = new HttpHeaders();
-            headers.set(SERVICE_AUTHORIZATION, authTokenGenerator.generate());
+            //TODO - this should be queried outside of the loop
+            headers.set(SERVICE_AUTHORIZATION, authTokenGenerator.generate());//TODO - candidate - this is downloaded as a service user
             headers.set(USER_ROLES, CASEWORKER_DIVORCE);
             HttpEntity<RestRequest> httpEntity = new HttpEntity<>(headers);
 

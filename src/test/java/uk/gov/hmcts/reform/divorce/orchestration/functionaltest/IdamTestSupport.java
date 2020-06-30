@@ -106,7 +106,7 @@ public abstract class IdamTestSupport extends MockedFunctionalTest {
                 .withBody(convertObjectToJsonString(response))));
     }
 
-    void stubSignIn() {
+    void stubSignIn() {//TODO - candidate for removal
         try {
             stubAuthoriseEndpoint(getBasicAuthHeader(citizenUserName, citizenPassword),
                 convertObjectToJsonString(AUTHENTICATE_USER_RESPONSE));

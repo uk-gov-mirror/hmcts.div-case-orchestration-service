@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.divorce.orchestration.functionaltest;
 
 import com.google.common.collect.ImmutableMap;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,8 +20,8 @@ import static com.jayway.jsonpath.matchers.JsonPathMatchers.isJson;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static uk.gov.hmcts.reform.divorce.orchestration.TestConstants.AUTH_TOKEN;
@@ -36,7 +37,6 @@ import static uk.gov.hmcts.reform.divorce.orchestration.domain.model.Orchestrati
 import static uk.gov.hmcts.reform.divorce.orchestration.testutil.ObjectMapperTestUtil.convertObjectToJsonString;
 import static uk.gov.hmcts.reform.divorce.orchestration.testutil.ObjectMapperTestUtil.getJsonFromResourceFile;
 
-@DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
 public class RespondentSolicitorNominatedITest extends IdamTestSupport {
 
     private static final String API_URL = "/aos-solicitor-nominated";
@@ -45,7 +45,13 @@ public class RespondentSolicitorNominatedITest extends IdamTestSupport {
     @Autowired
     private MockMvc webClient;
 
+    @Before
+    public void setUp() throws Exception {
+        resetAllMockServices();
+    }
+
     @Test
+    @DirtiesContext
     public void givenRespondentSolicitorNominated_whenCallbackCalled_linkingFieldsAreReset() throws Exception {
         final GeneratePinRequest pinRequest = GeneratePinRequest.builder()
             .firstName("")
@@ -54,16 +60,14 @@ public class RespondentSolicitorNominatedITest extends IdamTestSupport {
 
         final Pin pin = Pin.builder().pin(TEST_PIN_CODE).userId(TEST_LETTER_HOLDER_ID_CODE).build();
 
-        CcdCallbackRequest ccdCallbackRequest = getJsonFromResourceFile(
-            AOS_SOL_NOMINATED_JSON, CcdCallbackRequest.class);
+        CcdCallbackRequest ccdCallbackRequest = getJsonFromResourceFile(AOS_SOL_NOMINATED_JSON, CcdCallbackRequest.class);
 
         Map<String, Object> caseData = ccdCallbackRequest.getCaseDetails().getCaseData();
-
         caseData.put(RESPONDENT_LETTER_HOLDER_ID, TEST_LETTER_HOLDER_ID_CODE);
 
         String caseId = ccdCallbackRequest.getCaseDetails().getCaseId();
 
-        final CaseDetails caseDetails = CaseDetails.builder()
+        final CaseDetails caseDetails = CaseDetails.builder()//TODO - we're just reassembling this
             .caseId(caseId)
             .caseData(caseData)
             .build();
@@ -76,9 +80,11 @@ public class RespondentSolicitorNominatedITest extends IdamTestSupport {
             DOCUMENT_TYPE_RESPONDENT_INVITATION
         );
 
-        stubServiceAuthProvider(HttpStatus.OK, TEST_SERVICE_AUTH_TOKEN);
-        stubDMStore(documentId, new byte[] {1, 2, 3});
-        stubSignIn();
+        stubServiceAuthProvider(OK, TEST_SERVICE_AUTH_TOKEN);
+        stubDMStore(documentId, new byte[] {1, 2, 3});//TODO - how do we mock the service user in other test cases?
+
+        //TODO - this is about getting the pin
+        stubSignIn();//TODO - candidate
         stubPinDetailsEndpoint(BEARER_AUTH_TOKEN_1, pinRequest, pin);
 
         webClient.perform(MockMvcRequestBuilders.post(API_URL)

@@ -42,7 +42,7 @@ public class RetrieveDraftITest extends MockedFunctionalTest {
         "/casemaintenance/version/1/updateCase/1547073120300616/paymentMade";
     private static final String CFS_CONTEXT_PATH = "/caseformatter/version/1/to-divorce-format";
     private static final String CFS_TO_CCD_CONTEXT_PATH = "/caseformatter/version/1/to-ccd-format";
-    private static final String AUTH_SERVICE_PATH = "/lease";
+    private static final String AUTH_SERVICE_PATH = "/lease";//TODO - candidate? - do this next
 
     private static final String CARD_PAYMENT_PATH = "/card-payments/RC-1547-0733-1813-9545";
     private static final String USER_TOKEN = "Some JWT Token";
@@ -190,7 +190,7 @@ public class RetrieveDraftITest extends MockedFunctionalTest {
     }
 
 
-    private void stubAuthServerEndpoint() {
+    private void stubAuthServerEndpoint() {//TODO - strong candidate
         Algorithm algorithm = mock(Algorithm.class);
         String body = JWT.create()
             .withExpiresAt(Date.from(ZonedDateTime.now().plusHours(1).toInstant())).sign(algorithm);
