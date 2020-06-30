@@ -155,11 +155,6 @@ public class ProcessPbaPaymentITest extends MockedFunctionalTest {
         //TODO - this currently needs a mock it doesn't set - port 4011
     }
 
-    @After
-    public void tearDown() throws Exception {
-        serviceAuthProviderServer.resetAll();
-    }
-
     @Test
     public void givenInvalidCaseData_whenProcessPbaPayment_thenReturnErrors() throws Exception {
         caseData.put(STATEMENT_OF_TRUTH, NO_VALUE);

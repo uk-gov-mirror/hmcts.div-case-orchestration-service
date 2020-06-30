@@ -63,11 +63,6 @@ public class BulkPrintTest extends IdamTestSupport {
         stubServiceAuthProvider(HttpStatus.OK, TEST_SERVICE_AUTH_TOKEN);
     }
 
-    @After
-    public void tearDown() throws Exception {
-        serviceAuthProviderServer.resetAll();
-    }
-
     @Test
     public void givenCaseDataWithNoSolicitor_whenCalledBulkPrint_thenExpectDueDateInCCDResponse() throws Exception {
         stubSendLetterService(HttpStatus.OK);

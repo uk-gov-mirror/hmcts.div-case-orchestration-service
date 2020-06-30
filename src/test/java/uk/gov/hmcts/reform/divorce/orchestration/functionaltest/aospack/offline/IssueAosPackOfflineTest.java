@@ -85,11 +85,6 @@ public class IssueAosPackOfflineTest extends MockedFunctionalTest {
         stubDMStore(TEST_DOCUMENT_ID_IN_EXAMPLE_PAYLOAD, "existingDocumentContent".getBytes());
     }
 
-    @After
-    public void tearDown() throws Exception {
-        serviceAuthProviderServer.resetAll();
-    }
-
     @Test
     public void testEndpointReturnsAdequateResponse_ForRespondent() throws Exception {
         CcdCallbackRequest ccdCallbackRequest = getJsonFromResourceFile(TEST_PAYLOAD, CcdCallbackRequest.class);

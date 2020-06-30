@@ -57,31 +57,31 @@ public class HealthCheckITest extends MockedFunctionalTest {
     @Autowired
     private ServiceAuthorisationApi serviceAuthorisationApi;
 
-    @Test
-    public void throwAwayTest() {
-        String peter = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlBldGVyIEdyaWZmaW4iLCJpYXQiOjE1MTYyMzkwMjIsImV4cCI6MTM3MTcyMDkzOX0.TEmPCRmuSk6USvM2HCiuqD54lpPGWrdtmbghNpeOh44";
-        stubServiceAuthProvider(HttpStatus.OK, peter);
-        System.out.println("hey: " + authTokenGenerator.generate());
-        assertThat(authTokenGenerator.generate(), is("Bearer " + peter));
-//        String body = new RestTemplate().postForEntity("http://localhost:4504/lease", null, String.class).getBody();//TODO - comment this if it doesn't work
-        String feignBody = serviceAuthorisationApi.serviceToken(Collections.emptyMap());
-        serviceAuthProviderServer.resetAll();
-
-//        System.out.println("ho: " + authTokenGenerator.generate());
-
-        String lois = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkxvaXMgR3JpZmZpbiIsImlhdCI6MTUxNjIzOTAyMiwiZXhwIjoxMzcxNzIwOTM5fQ.qro3oP5uTdRNRrk2gQaqrFQ6EdJdNnURy0Pn1SZ11v0";
-        //TODO - problem discovered. JWT had no expiry date. To me that's a bug in the service-auth library. It should refresh by default.
-        //TODO - I might be to force this by having a new bean created for every class - although this test won't fail
-        //TODO - this could be causing a production issue or not
-        //todo - the way to check is to understand where this JWT comes from and whether or not it has the expiry date in real life
-        stubServiceAuthProvider(HttpStatus.OK, lois);
-        System.out.println("let's go: " + authTokenGenerator.generate());
-        String body2 = new RestTemplate().postForEntity("http://localhost:4504/lease", null, String.class).getBody();//TODO - confirmed. it's not the mock. it's the bean
-        String feignBody2 = serviceAuthorisationApi.serviceToken(Collections.emptyMap());
-        assertThat(authTokenGenerator.generate(), is("Bearer " + lois));
-        serviceAuthProviderServer.resetAll();
-        //TODO - carry on
-    }
+//    @Test
+//    public void throwAwayTest() {
+//        String peter = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlBldGVyIEdyaWZmaW4iLCJpYXQiOjE1MTYyMzkwMjIsImV4cCI6MTM3MTcyMDkzOX0.TEmPCRmuSk6USvM2HCiuqD54lpPGWrdtmbghNpeOh44";
+//        stubServiceAuthProvider(HttpStatus.OK, peter);
+//        System.out.println("hey: " + authTokenGenerator.generate());
+//        assertThat(authTokenGenerator.generate(), is("Bearer " + peter));
+////        String body = new RestTemplate().postForEntity("http://localhost:4504/lease", null, String.class).getBody();//TODO - comment this if it doesn't work
+//        String feignBody = serviceAuthorisationApi.serviceToken(Collections.emptyMap());
+//        serviceAuthProviderServer.resetAll();
+//
+////        System.out.println("ho: " + authTokenGenerator.generate());
+//
+//        String lois = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkxvaXMgR3JpZmZpbiIsImlhdCI6MTUxNjIzOTAyMiwiZXhwIjoxMzcxNzIwOTM5fQ.qro3oP5uTdRNRrk2gQaqrFQ6EdJdNnURy0Pn1SZ11v0";
+//        //TODO - problem discovered. JWT had no expiry date. To me that's a bug in the service-auth library. It should refresh by default.
+//        //TODO - I might be to force this by having a new bean created for every class - although this test won't fail
+//        //TODO - this could be causing a production issue or not
+//        //todo - the way to check is to understand where this JWT comes from and whether or not it has the expiry date in real life
+//        stubServiceAuthProvider(HttpStatus.OK, lois);
+//        System.out.println("let's go: " + authTokenGenerator.generate());
+//        String body2 = new RestTemplate().postForEntity("http://localhost:4504/lease", null, String.class).getBody();//TODO - confirmed. it's not the mock. it's the bean
+//        String feignBody2 = serviceAuthorisationApi.serviceToken(Collections.emptyMap());
+//        assertThat(authTokenGenerator.generate(), is("Bearer " + lois));
+//        serviceAuthProviderServer.resetAll();
+//        //TODO - carry on
+//    }
 
     @Test
     public void givenAllDependenciesAreUp_whenCheckHealth_thenReturnStatusUp() throws Exception {

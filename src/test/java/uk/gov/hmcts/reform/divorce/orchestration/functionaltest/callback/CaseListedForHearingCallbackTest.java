@@ -252,9 +252,4 @@ public class CaseListedForHearingCallbackTest extends MockedFunctionalTest {
             .andExpect(status().isBadRequest());
     }
 
-    @After
-    public void tearDown() throws Exception {
-        serviceAuthProviderServer.resetAll();
-    }
-
 }

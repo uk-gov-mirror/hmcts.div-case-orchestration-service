@@ -168,11 +168,6 @@ public class RetrieveDraftITest extends MockedFunctionalTest {
         //TODO - this currently needs a mock it doesn't set - port 4011
     }
 
-    @After
-    public void tearDown() throws Exception {
-        serviceAuthProviderServer.resetAll();
-    }
-
     private void stubCmsServerEndpoint(String path, HttpStatus status, String body, HttpMethod method) {
         maintenanceServiceServer.stubFor(WireMock.request(method.name(), urlEqualTo(path))
             .willReturn(aResponse()
@@ -202,11 +197,11 @@ public class RetrieveDraftITest extends MockedFunctionalTest {
         Algorithm algorithm = mock(Algorithm.class);
         String body = JWT.create()
             .withExpiresAt(Date.from(ZonedDateTime.now().plusHours(1).toInstant())).sign(algorithm);
-//        serviceAuthProviderServer.stubFor(WireMock.post(AUTH_SERVICE_PATH)
-//            .willReturn(aResponse()
-//                .withStatus(HttpStatus.OK.value())
-//                .withHeader(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE)
-//                .withBody(body)));
+        serviceAuthProviderServer.stubFor(WireMock.post(AUTH_SERVICE_PATH)
+            .willReturn(aResponse()
+                .withStatus(HttpStatus.OK.value())
+                .withHeader(CONTENT_TYPE, APPLICATION_JSON_UTF8_VALUE)
+                .withBody(body)));
     }
 
     private void stubPaymentServerEndpoint(String body) {

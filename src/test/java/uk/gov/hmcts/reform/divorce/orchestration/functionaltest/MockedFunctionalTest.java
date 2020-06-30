@@ -4,6 +4,7 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 import com.github.tomakehurst.wiremock.matching.EqualToPattern;
+import org.junit.After;
 import org.junit.ClassRule;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -173,6 +174,11 @@ public abstract class MockedFunctionalTest {
         serviceAuthProviderServer.resetAll();
         validationServiceServer.resetAll();
         documentStore.resetAll();
+    }
+
+    @After
+    public final void tearDown() throws Exception {q
+        serviceAuthProviderServer.resetAll();
     }
 
 }

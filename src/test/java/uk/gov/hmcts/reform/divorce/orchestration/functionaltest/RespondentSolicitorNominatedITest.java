@@ -46,12 +46,6 @@ public class RespondentSolicitorNominatedITest extends IdamTestSupport {
     @Autowired
     private MockMvc webClient;
 
-    @Before
-    public void setUp() throws Exception {
-//        resetAllMockServices();
-        serviceAuthProviderServer.resetAll();
-    }
-
     @Test
     @DirtiesContext
     public void givenRespondentSolicitorNominated_whenCallbackCalled_linkingFieldsAreReset() throws Exception {
@@ -99,11 +93,6 @@ public class RespondentSolicitorNominatedITest extends IdamTestSupport {
                 isJson(),
                 hasJsonPath("$.errors", nullValue())
             )));
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        serviceAuthProviderServer.resetAll();
     }
 
 }

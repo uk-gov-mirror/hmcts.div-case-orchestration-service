@@ -169,11 +169,6 @@ public class DnPronouncedNotificationTest extends MockedFunctionalTest {
     @Captor
     private ArgumentCaptor<List<GeneratedDocumentInfo>> documentsToPrintCaptor;
 
-    @After
-    public void tearDown() throws Exception {
-        serviceAuthProviderServer.resetAll();
-    }
-
     @Test
     public void givenCaseDataWithNoPaysCosts_whenDnPronounced_thenSendGenericNotifications() throws Exception {
         ImmutableMap<String, Object> additionalEntries = ImmutableMap.<String, Object>builder().build();

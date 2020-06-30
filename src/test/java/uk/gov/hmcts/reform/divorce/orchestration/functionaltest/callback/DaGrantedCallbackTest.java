@@ -136,11 +136,6 @@ public class DaGrantedCallbackTest extends MockedFunctionalTest {
         verify(mockEmailService).sendEmailAndReturnExceptionIfFails(eq(TEST_RESPONDENT_EMAIL), anyString(), anyMap(), anyString());
     }
 
-    @After
-    public void tearDown() throws Exception {
-        serviceAuthProviderServer.resetAll();
-    }
-
     @Test
     public void givenOfflineRespondentDetails_ThenOkResponse() throws Exception {
         //Given
