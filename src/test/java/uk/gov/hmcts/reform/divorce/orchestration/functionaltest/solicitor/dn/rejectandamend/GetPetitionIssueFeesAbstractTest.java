@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.divorce.orchestration.functionaltest.solicitor_dn_reject_and_amend;
+package uk.gov.hmcts.reform.divorce.orchestration.functionaltest.solicitor.dn.rejectandamend;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.matching.EqualToPattern;
@@ -21,6 +21,10 @@ import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 import static uk.gov.hmcts.reform.divorce.orchestration.TestConstants.AUTH_TOKEN;
 import static uk.gov.hmcts.reform.divorce.orchestration.TestConstants.TEST_CASE_ID;
+import static uk.gov.hmcts.reform.divorce.orchestration.TestConstants.TEST_FEE_AMOUNT;
+import static uk.gov.hmcts.reform.divorce.orchestration.TestConstants.TEST_FEE_CODE;
+import static uk.gov.hmcts.reform.divorce.orchestration.TestConstants.TEST_FEE_DESCRIPTION;
+import static uk.gov.hmcts.reform.divorce.orchestration.TestConstants.TEST_FEE_VERSION;
 import static uk.gov.hmcts.reform.divorce.orchestration.TestConstants.TEST_STATE;
 import static uk.gov.hmcts.reform.divorce.orchestration.testutil.ObjectMapperTestUtil.convertObjectToJsonString;
 
@@ -33,6 +37,10 @@ public abstract class GetPetitionIssueFeesAbstractTest extends MockedFunctionalT
         .format("/casemaintenance/version/1/add-petitioner-solicitor-role/%s", TEST_CASE_ID);
 
     CcdCallbackRequest callbackRequest;
+
+    FeeResponse issueFeeResponse;
+
+    FeeResponse amendFeeResponse;
 
     @Autowired
     MockMvc webClient;
@@ -48,6 +56,22 @@ public abstract class GetPetitionIssueFeesAbstractTest extends MockedFunctionalT
         callbackRequest = CcdCallbackRequest.builder()
             .caseDetails(caseDetails)
             .build();
+
+        issueFeeResponse = FeeResponse.builder()
+            .amount(TEST_FEE_AMOUNT)
+            .feeCode(TEST_FEE_CODE)
+            .version(TEST_FEE_VERSION)
+            .description(TEST_FEE_DESCRIPTION)
+            .build();
+        stubGetFeeFromFeesAndPayments(issueFeeResponse, false);
+
+        amendFeeResponse = FeeResponse.builder()
+            .amount(95d)
+            .feeCode(TEST_FEE_CODE)
+            .version(TEST_FEE_VERSION)
+            .description(TEST_FEE_DESCRIPTION)
+            .build();
+        stubGetFeeFromFeesAndPayments(amendFeeResponse, true);
     }
 
     void stubGetFeeFromFeesAndPayments(FeeResponse feeResponse, boolean petitionAmendment) {
