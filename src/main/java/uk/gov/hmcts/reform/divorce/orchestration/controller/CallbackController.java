@@ -31,6 +31,7 @@ import uk.gov.hmcts.reform.divorce.orchestration.util.CaseDataUtils;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 
 import static java.lang.String.format;
@@ -256,12 +257,19 @@ public class CallbackController {
             response = CcdCallbackResponse.class),
         @ApiResponse(code = 400, message = "Bad Request")})
     public ResponseEntity<CcdCallbackResponse> petitionSubmitted(
-        @RequestBody @ApiParam("CaseData") CcdCallbackRequest ccdCallbackRequest) {
+        @RequestBody @ApiParam("CaseData") CcdCallbackRequest ccdCallbackRequest) throws WorkflowException {
 
         try {
-            caseOrchestrationService.sendPetitionerSubmissionNotificationEmail(ccdCallbackRequest);//TODO - this doesn't log errors
+            caseOrchestrationService.sendPetitionerSubmissionNotificationEmail(ccdCallbackRequest);
         } catch (CaseOrchestrationServiceException exception) {
-            exception.printStackTrace();//TODO - DWT
+            String exceptionMessage = exception.getMessage();
+            Optional<String> caseId = exception.getCaseId();
+            String identifiableErrorMessage = caseId.map(value -> "Case id [" + value + "]: " + exceptionMessage).orElse(exceptionMessage);//TODO - move this to global handler?
+            log.error(identifiableErrorMessage, exception);//TODO - this needs to be in the global handler
+            //TODO - test this
+            throw (WorkflowException) exception.getCause();//TODO - reconsider this
+
+            //TODO - bring the usual behaviour to the global handler - then, stop catching this exception and start throwing it
         }
         //TODO - I might want the response to be better to the user - the case exception is not globally handled
 
