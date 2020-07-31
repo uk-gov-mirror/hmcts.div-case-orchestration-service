@@ -256,9 +256,14 @@ public class CallbackController {
             response = CcdCallbackResponse.class),
         @ApiResponse(code = 400, message = "Bad Request")})
     public ResponseEntity<CcdCallbackResponse> petitionSubmitted(
-        @RequestBody @ApiParam("CaseData") CcdCallbackRequest ccdCallbackRequest) throws WorkflowException {
+        @RequestBody @ApiParam("CaseData") CcdCallbackRequest ccdCallbackRequest) {
 
-        caseOrchestrationService.sendPetitionerSubmissionNotificationEmail(ccdCallbackRequest);//TODO - this doesn't log errors
+        try {
+            caseOrchestrationService.sendPetitionerSubmissionNotificationEmail(ccdCallbackRequest);//TODO - this doesn't log errors
+        } catch (CaseOrchestrationServiceException exception) {
+            exception.printStackTrace();//TODO - DWT
+        }
+        //TODO - I might want the response to be better to the user - the case exception is not globally handled
 
         return ResponseEntity.ok(CcdCallbackResponse.builder()
             .data(ccdCallbackRequest.getCaseDetails().getCaseData())
