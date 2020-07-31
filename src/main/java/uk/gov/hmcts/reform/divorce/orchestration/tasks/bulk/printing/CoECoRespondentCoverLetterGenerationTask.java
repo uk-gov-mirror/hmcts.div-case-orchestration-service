@@ -63,7 +63,7 @@ public class CoECoRespondentCoverLetterGenerationTask extends BasePayloadSpecifi
             .build();
     }
 
-    private String getCourtName(Map<String, Object> caseData) {//TODO - reuse in parent class?
+    private String getCourtName(Map<String, Object> caseData) {//TODO - reuse in parent class? - do it last
         try {
             return courtLookupService.getDnCourtByKey(CoECoverLetterDataExtractor.getCourtId(caseData)).getName();
         } catch (CourtDetailsNotFound e) {

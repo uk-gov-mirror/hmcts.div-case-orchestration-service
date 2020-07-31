@@ -31,7 +31,6 @@ import uk.gov.hmcts.reform.divorce.orchestration.util.CaseDataUtils;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 
 import static java.lang.String.format;
@@ -264,14 +263,13 @@ public class CallbackController {
             ccdCallbackResponseBuilder.data(ccdCallbackRequest.getCaseDetails().getCaseData());
         } catch (CaseOrchestrationServiceException exception) {
             String exceptionMessage = exception.getMessage();
-            Optional<String> caseId = exception.getCaseId();
-            String identifiableErrorMessage = caseId.map(value -> "Case id [" + value + "]: " + exceptionMessage).orElse(exceptionMessage);//TODO - move this to global handler? if not possible, then make it as reusable as possible
+            String identifiableErrorMessage = exception.getCaseId()
+                .map(value -> "Case id [" + value + "]: " + exceptionMessage)
+                .orElse(exceptionMessage);//TODO - move this to global handler? if not possible, then make it as reusable as possible
             log.error(identifiableErrorMessage, exception);//TODO - this needs to be in the global handler
             ccdCallbackResponseBuilder.errors(ImmutableList.of(exception.getMessage()));
-
             //TODO - bring the usual behaviour to the global handler - then, stop catching this exception and start throwing it
         }
-        //TODO - I might want the response to be better to the user - the case exception is not globally handled
 
         return ResponseEntity.ok(ccdCallbackResponseBuilder.build());
     }

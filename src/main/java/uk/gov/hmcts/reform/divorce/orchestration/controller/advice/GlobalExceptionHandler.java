@@ -30,6 +30,7 @@ class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(WorkflowException.class)
+//TODO - Can I have two methods for handling WorkflowExceptions if I have a different return type? If so, this means that I can safely bring the CaseOrchestrationException behaviour to this class
     ResponseEntity<Object> handleWorkFlowException(WorkflowException exception) {
         log.warn(exception.getMessage(), exception);
 
