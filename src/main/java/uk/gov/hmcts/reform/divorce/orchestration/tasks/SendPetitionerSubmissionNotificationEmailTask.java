@@ -55,6 +55,10 @@ public class SendPetitionerSubmissionNotificationEmailTask implements Task<Map<S
         final String caseId = getCaseId(context);
         log.info("CaseID: {} email to petitioner/solicitor is going to be send.", caseId);
 
+        //TODO - this is not logging errors -  to try this, let's revert to the version
+        // that want a mandatory e-mail, make the integration test fail and then see if the exception is
+        // linked to a case
+        //TODO - if the non-e-mail test was not put back, let's do it - do it last
         if (isPetitionAmended(caseData)) {
             sendApplicationAmendSubmittedEmailToCorrectRecipient(context, caseData);
             log.info("CaseID: {} email sent.", caseId);

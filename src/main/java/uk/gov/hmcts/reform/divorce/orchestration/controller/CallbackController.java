@@ -171,6 +171,7 @@ public class CallbackController {
         Map<String, Object> response = caseOrchestrationService.solicitorSubmission(ccdCallbackRequest, authorizationToken);
 
         if (response != null && response.containsKey(SOLICITOR_VALIDATION_ERROR_KEY)) {
+            //TODO - this is not logging errors
             return ResponseEntity.ok(
                 CcdCallbackResponse.builder()
                     .errors((List<String>) response.get(SOLICITOR_VALIDATION_ERROR_KEY))
@@ -257,7 +258,7 @@ public class CallbackController {
     public ResponseEntity<CcdCallbackResponse> petitionSubmitted(
         @RequestBody @ApiParam("CaseData") CcdCallbackRequest ccdCallbackRequest) throws WorkflowException {
 
-        caseOrchestrationService.sendPetitionerSubmissionNotificationEmail(ccdCallbackRequest);
+        caseOrchestrationService.sendPetitionerSubmissionNotificationEmail(ccdCallbackRequest);//TODO - this doesn't log errors
 
         return ResponseEntity.ok(CcdCallbackResponse.builder()
             .data(ccdCallbackRequest.getCaseDetails().getCaseData())
