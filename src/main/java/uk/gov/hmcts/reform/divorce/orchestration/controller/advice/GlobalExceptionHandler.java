@@ -76,10 +76,6 @@ class GlobalExceptionHandler {
             responseEntity = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exceptionMessage);
         }
 
-//        Optional<String> caseId = taskException.getCaseId();//TODO - might be reused
-//        String identifiableErrorMessage = caseId.map(value -> "Case id [" + value + "]: " + exceptionMessage).orElse(exceptionMessage);
-//        log.warn(identifiableErrorMessage, taskException);
-
         return responseEntity;
     }
 

@@ -75,13 +75,14 @@ public class PetitionSubmissionNotificationEmailITest extends MockedFunctionalTe
                 .content(convertObjectToJsonString(ccdCallbackRequest))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())//TODO - uncomment
-                .andExpect(content().string("not this..."));
-//                .andExpect(content().json(convertObjectToJsonString(expected)));
+                .andExpect(status().isOk())
+                .andExpect(content().json(convertObjectToJsonString(expected)));
 
         verify(emailClient).sendEmail(eq(PETITION_SUBMITTED_TEMPLATE_ID),
                 eq(TEST_USER_EMAIL),
                 any(), any());
     }
+
+    //TODO - write test that returns errors listed
 
 }

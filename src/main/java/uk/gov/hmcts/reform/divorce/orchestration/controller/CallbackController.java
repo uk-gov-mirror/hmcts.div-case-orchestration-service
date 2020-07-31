@@ -172,7 +172,6 @@ public class CallbackController {
         Map<String, Object> response = caseOrchestrationService.solicitorSubmission(ccdCallbackRequest, authorizationToken);
 
         if (response != null && response.containsKey(SOLICITOR_VALIDATION_ERROR_KEY)) {
-            //TODO - this is not logging errors
             return ResponseEntity.ok(
                 CcdCallbackResponse.builder()
                     .errors((List<String>) response.get(SOLICITOR_VALIDATION_ERROR_KEY))
@@ -256,26 +255,25 @@ public class CallbackController {
         @ApiResponse(code = 200, message = "Email sent to Petitioner that their application has been submitted",
             response = CcdCallbackResponse.class),
         @ApiResponse(code = 400, message = "Bad Request")})
-    public ResponseEntity<CcdCallbackResponse> petitionSubmitted(
-        @RequestBody @ApiParam("CaseData") CcdCallbackRequest ccdCallbackRequest) throws WorkflowException {
+    public ResponseEntity<CcdCallbackResponse> petitionSubmitted(@RequestBody @ApiParam("CaseData") CcdCallbackRequest ccdCallbackRequest) {
+
+        CcdCallbackResponse.CcdCallbackResponseBuilder ccdCallbackResponseBuilder = CcdCallbackResponse.builder();
 
         try {
             caseOrchestrationService.sendPetitionerSubmissionNotificationEmail(ccdCallbackRequest);
+            ccdCallbackResponseBuilder.data(ccdCallbackRequest.getCaseDetails().getCaseData());
         } catch (CaseOrchestrationServiceException exception) {
             String exceptionMessage = exception.getMessage();
             Optional<String> caseId = exception.getCaseId();
-            String identifiableErrorMessage = caseId.map(value -> "Case id [" + value + "]: " + exceptionMessage).orElse(exceptionMessage);//TODO - move this to global handler?
+            String identifiableErrorMessage = caseId.map(value -> "Case id [" + value + "]: " + exceptionMessage).orElse(exceptionMessage);//TODO - move this to global handler? if not possible, then make it as reusable as possible
             log.error(identifiableErrorMessage, exception);//TODO - this needs to be in the global handler
-            //TODO - test this
-            throw (WorkflowException) exception.getCause();//TODO - reconsider this
+            ccdCallbackResponseBuilder.errors(ImmutableList.of(exception.getMessage()));
 
             //TODO - bring the usual behaviour to the global handler - then, stop catching this exception and start throwing it
         }
         //TODO - I might want the response to be better to the user - the case exception is not globally handled
 
-        return ResponseEntity.ok(CcdCallbackResponse.builder()
-            .data(ccdCallbackRequest.getCaseDetails().getCaseData())
-            .build());
+        return ResponseEntity.ok(ccdCallbackResponseBuilder.build());
     }
 
     @PostMapping(path = "/petition-updated", consumes = APPLICATION_JSON, produces = APPLICATION_JSON)

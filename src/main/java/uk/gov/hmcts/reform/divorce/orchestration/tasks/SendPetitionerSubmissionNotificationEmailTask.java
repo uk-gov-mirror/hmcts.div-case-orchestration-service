@@ -11,7 +11,6 @@ import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.task.Task;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.task.TaskContext;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.task.TaskException;
 import uk.gov.hmcts.reform.divorce.orchestration.service.EmailService;
-import uk.gov.hmcts.reform.divorce.orchestration.service.bulk.print.helper.ExtractorHelper;
 import uk.gov.hmcts.reform.divorce.orchestration.util.CaseDataUtils;
 
 import java.util.HashMap;
@@ -56,24 +55,17 @@ public class SendPetitionerSubmissionNotificationEmailTask implements Task<Map<S
         final String caseId = getCaseId(context);
         log.info("CaseID: {} email to petitioner/solicitor is going to be send.", caseId);
 
-        //TODO - this is not logging errors -  to try this, let's revert to the version
-        // that want a mandatory e-mail, make the integration test fail and then see if the exception is
-        // linked to a case
-        //TODO - if the non-e-mail test was not put back, let's do it - do it last
-
-        ExtractorHelper.getMandatoryStringValue(caseData, "myField");//TODO - this should not go to prod
-
-//        if (isPetitionAmended(caseData)) {
-//            sendApplicationAmendSubmittedEmailToCorrectRecipient(context, caseData);
-//            log.info("CaseID: {} email sent.", caseId);
-//        } else {
-//            if (isPetitionerEmailPopulated(caseData)) {
-//                sendApplicationSubmittedEmail(context, caseData);
-//                log.info("CaseID: {} email sent.", caseId);
-//            } else {
-//                log.info("CaseID: {} no email sent. There is no petitioner email in this case", caseId);
-//            }
-//        }
+        if (isPetitionAmended(caseData)) {
+            sendApplicationAmendSubmittedEmailToCorrectRecipient(context, caseData);
+            log.info("CaseID: {} email sent.", caseId);
+        } else {
+            if (isPetitionerEmailPopulated(caseData)) {
+                sendApplicationSubmittedEmail(context, caseData);
+                log.info("CaseID: {} email sent.", caseId);
+            } else {
+                log.info("CaseID: {} no email sent. There is no petitioner email in this case", caseId);
+            }
+        }
 
         return caseData;
     }

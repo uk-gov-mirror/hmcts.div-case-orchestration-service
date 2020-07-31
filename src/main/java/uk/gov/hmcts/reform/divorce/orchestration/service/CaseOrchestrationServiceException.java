@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public class CaseOrchestrationServiceException extends Exception {
 
-    private Optional<String> caseId;//TODO - are these exceptions always Workflow Exceptions?
+    private Optional<String> caseId = Optional.empty();//TODO - are these exceptions always Workflow Exceptions?
 
     public CaseOrchestrationServiceException(String message) {
         super(message);

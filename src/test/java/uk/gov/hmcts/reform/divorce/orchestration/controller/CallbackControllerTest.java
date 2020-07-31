@@ -261,13 +261,31 @@ public class CallbackControllerTest {
 
         ResponseEntity<CcdCallbackResponse> response = classUnderTest.petitionSubmitted(ccdCallbackRequest);
 
-        CcdCallbackResponse expectedResponse = CcdCallbackResponse.builder().data(caseData).build();
-
-        assertEquals(OK, response.getStatusCode());
-        assertEquals(expectedResponse, response.getBody());
+        CcdCallbackResponse ccdCallbackResponse = response.getBody();
+        assertThat(response.getStatusCode(), is(OK));
+        assertThat(ccdCallbackResponse.getData(), is(caseData));
+        assertThat(ccdCallbackResponse.getErrors(), is(nullValue()));
     }
 
-    //TODO - write a test when I decide which exception I want to throw here - if that's the decision
+    @Test
+    public void shouldReturnErrors_whenPetitionSubmittedCallbackThrowsException() throws Exception {
+        final Map<String, Object> caseData = Collections.emptyMap();
+        final CaseDetails caseDetails = CaseDetails.builder()
+            .caseData(caseData)
+            .build();
+        final CcdCallbackRequest ccdCallbackRequest = new CcdCallbackRequest();
+        ccdCallbackRequest.setCaseDetails(caseDetails);
+
+        when(caseOrchestrationService.sendPetitionerSubmissionNotificationEmail(ccdCallbackRequest))
+            .thenThrow(new CaseOrchestrationServiceException("This is an error message"));
+
+        ResponseEntity<CcdCallbackResponse> response = classUnderTest.petitionSubmitted(ccdCallbackRequest);
+
+        CcdCallbackResponse ccdCallbackResponse = response.getBody();
+        assertThat(response.getStatusCode(), is(OK));
+        assertThat(ccdCallbackResponse.getData(), is(nullValue()));
+        assertThat(ccdCallbackResponse.getErrors(), hasItem("This is an error message"));
+    }
 
     @Test
     public void whenDnPronouncedCallback_thenReturnCcdResponse() throws Exception {

@@ -11,7 +11,7 @@ public class TaskException extends RuntimeException {
     }
 
     public TaskException(Throwable cause) {
-        super(cause);//TODO - maybe we don't want this constructor. It's leaking code information. - We only want the message (and the cause, of course)
+        super(cause);//TODO - maybe we don't want this constructor. It's leaking code information. - We only want the message (and the cause, of course) - do it last
     }
 
 }
