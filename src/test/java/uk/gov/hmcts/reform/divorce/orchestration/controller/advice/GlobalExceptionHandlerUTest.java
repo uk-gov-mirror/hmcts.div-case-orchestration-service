@@ -23,7 +23,7 @@ import static uk.gov.hmcts.reform.divorce.orchestration.TestConstants.TEST_ERROR
 public class GlobalExceptionHandlerUTest {
     private static  final int STATUS_CODE = HttpStatus.BAD_REQUEST.value();
 
-    private final GlobalExceptionHandler classUnderTest = new GlobalExceptionHandler();//TODO - write a test for exposing the case id in case orchestration exceptions - test concept of different return types first
+    private final GlobalExceptionHandler classUnderTest = new GlobalExceptionHandler();//TODO - write a test for exposing the case id in case orchestration exceptions - test concept of different return types first - do it last
 
     @Test
     public void whenHandleBadRequestException_thenReturnUnderLyingError() {

@@ -44,8 +44,6 @@ public class PetitionSubmissionNotificationEmailITest extends MockedFunctionalTe
     @Autowired
     private MockMvc webClient;
 
-    //TODO - we should see logs linking us to the case when running this - we have to force a TaskException - ideally, I should find a case that I can test this with
-
     @Before
     public void setup() {
         caseData = new HashMap<>();

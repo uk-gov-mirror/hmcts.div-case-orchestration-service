@@ -24,4 +24,10 @@ public class CaseOrchestrationServiceException extends Exception {
     public Optional<String> getCaseId() {
         return caseId;
     }
+
+    public String getIdentifiableMessage() {
+        String exceptionMessage = getMessage();
+        return caseId.map(value -> "Case id [" + value + "]: " + exceptionMessage).orElse(exceptionMessage);
+    }
+
 }

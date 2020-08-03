@@ -262,13 +262,9 @@ public class CallbackController {
             caseOrchestrationService.sendPetitionerSubmissionNotificationEmail(ccdCallbackRequest);
             ccdCallbackResponseBuilder.data(ccdCallbackRequest.getCaseDetails().getCaseData());
         } catch (CaseOrchestrationServiceException exception) {
-            String exceptionMessage = exception.getMessage();
-            String identifiableErrorMessage = exception.getCaseId()
-                .map(value -> "Case id [" + value + "]: " + exceptionMessage)
-                .orElse(exceptionMessage);//TODO - move this to global handler? if not possible, then make it as reusable as possible
-            log.error(identifiableErrorMessage, exception);//TODO - this needs to be in the global handler
-            ccdCallbackResponseBuilder.errors(ImmutableList.of(exception.getMessage()));
-            //TODO - bring the usual behaviour to the global handler - then, stop catching this exception and start throwing it
+            log.error(exception.getIdentifiableMessage(), exception);
+            ccdCallbackResponseBuilder.errors(ImmutableList.of(exception.getMessage()));//TODO - make this reusable
+            //TODO - bring the usual behaviour to the global handler - then, stop catching this exception and start throwing it - do it last
         }
 
         return ResponseEntity.ok(ccdCallbackResponseBuilder.build());
