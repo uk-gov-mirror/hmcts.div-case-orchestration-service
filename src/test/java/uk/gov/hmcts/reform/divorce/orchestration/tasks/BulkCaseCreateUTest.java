@@ -151,7 +151,6 @@ public class BulkCaseCreateUTest {
         Map<String, Object> expectedResponse = ImmutableMap.of(BULK_CASE_LIST_KEY, Collections.singletonList(cmsResponse));
         verify(caseMaintenanceClient, times(1)).submitBulkCase(bulkCaseFormat(), AUTH_TOKEN);
         assertThat(response, is(expectedResponse));
-        assertThat(context.getTransientObject(BULKCASE_CREATION_ERROR), is(Collections.singletonList(ERROR_CASE_ID)));
     }
 
     private void setMinimumNumberOfCases(int minimunNoCases) {

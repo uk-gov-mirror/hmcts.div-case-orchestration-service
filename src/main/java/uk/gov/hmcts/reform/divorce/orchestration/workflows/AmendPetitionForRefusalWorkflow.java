@@ -5,6 +5,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.DefaultWorkflow;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.WorkflowException;
+import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.task.DefaultTaskContext;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.task.Task;
 import uk.gov.hmcts.reform.divorce.orchestration.tasks.CreateAmendPetitionDraftForRefusalTask;
 import uk.gov.hmcts.reform.divorce.orchestration.tasks.UpdateCaseInCCD;
@@ -26,17 +27,19 @@ public class AmendPetitionForRefusalWorkflow extends DefaultWorkflow<Map<String,
     private final UpdateCaseInCCD updateCaseInCCD;
 
     public Map<String, Object> run(String caseId, String authToken) throws WorkflowException {
+        DefaultTaskContext taskContext = new DefaultTaskContext();
         this.execute(
             new Task[] {
                 amendPetitionDraftForRefusal,
                 updateCaseInCCD
             },
+            taskContext,
             new HashMap<>(),
             ImmutablePair.of(CASE_ID_JSON_KEY, caseId),
             ImmutablePair.of(AUTH_TOKEN_JSON_KEY, authToken),
             ImmutablePair.of(CASE_EVENT_ID_JSON_KEY, AMEND_PETITION_FOR_REFUSAL_EVENT)
         );
 
-        return getContext().getTransientObject(NEW_AMENDED_PETITION_DRAFT_KEY);
+        return taskContext.getTransientObject(NEW_AMENDED_PETITION_DRAFT_KEY);
     }
 }

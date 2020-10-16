@@ -5,6 +5,8 @@ import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.task.TaskExc
 
 public class DefaultWorkflow<T> extends AbstractWorkflow<T> {
 
+    //TODO - test the other child of AbstractWorkflow?
+
     @SuppressWarnings("unchecked")
     @Override
     public T executeInternal(Task[] tasks, T payload) throws WorkflowException {

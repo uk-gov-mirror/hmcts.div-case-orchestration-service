@@ -37,15 +37,16 @@ public class RetrieveDraftWorkflow extends DefaultWorkflow<Map<String, Object>> 
     private final FormatDivorceSessionToCaseData formatDivorceSessionToCaseData;
 
     public Map<String, Object> run(String authToken) throws WorkflowException {
+        DefaultTaskContext mainContext = new DefaultTaskContext();
         Map<String, Object> caseData = this.execute(
             new Task[] {
                 retrieveDraft
             },
+            mainContext,
             new HashMap<>(),
             ImmutablePair.of(AUTH_TOKEN_JSON_KEY, authToken)
         );
-        DefaultTaskContext mainContext = getContext();
-        boolean paymentDataUpdated = updatePaymentEvent(caseData);
+        boolean paymentDataUpdated = updatePaymentEvent(caseData, mainContext);
 
         List<Task> pendingTasks = getPendingTasks(paymentDataUpdated);
         return this.execute(
@@ -55,7 +56,7 @@ public class RetrieveDraftWorkflow extends DefaultWorkflow<Map<String, Object>> 
         );
     }
 
-    private boolean updatePaymentEvent(Map<String, Object> caseData) throws WorkflowException {
+    private boolean updatePaymentEvent(Map<String, Object> caseData, DefaultTaskContext mainContext) throws WorkflowException {
         return Objects.nonNull(
             this.execute(
                 new Task[] {
@@ -63,7 +64,7 @@ public class RetrieveDraftWorkflow extends DefaultWorkflow<Map<String, Object>> 
                     formatDivorceSessionToCaseData,
                     paymentMadeEvent
                 },
-                new DefaultTaskContext(getContext()),
+                new DefaultTaskContext(mainContext),
                 caseData
             ));
     }

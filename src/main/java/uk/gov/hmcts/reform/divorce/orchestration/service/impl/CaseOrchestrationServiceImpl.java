@@ -14,6 +14,7 @@ import uk.gov.hmcts.reform.divorce.orchestration.domain.model.ccd.CcdCallbackRes
 import uk.gov.hmcts.reform.divorce.orchestration.domain.model.payment.Payment;
 import uk.gov.hmcts.reform.divorce.orchestration.domain.model.payment.PaymentUpdate;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.WorkflowException;
+import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.WorkflowExceptionWithErrors;
 import uk.gov.hmcts.reform.divorce.orchestration.service.CaseOrchestrationService;
 import uk.gov.hmcts.reform.divorce.orchestration.service.CaseOrchestrationServiceException;
 import uk.gov.hmcts.reform.divorce.orchestration.service.DocumentTemplateService;
@@ -191,16 +192,15 @@ public class CaseOrchestrationServiceImpl implements CaseOrchestrationService {
     public Map<String, Object> handleIssueEventCallback(CcdCallbackRequest ccdCallbackRequest,
                                                         String authToken,
                                                         boolean generateAosInvitation) throws WorkflowException {
-        Map<String, Object> payLoad = issueEventWorkflow.run(ccdCallbackRequest, authToken, generateAosInvitation);
-
-        if (issueEventWorkflow.errors().isEmpty()) {
+        try {
+            Map<String, Object> payLoad = issueEventWorkflow.run(ccdCallbackRequest, authToken, generateAosInvitation);
             log.info("Petition issued callback for case with CASE ID: {} successfully completed",
                 ccdCallbackRequest.getCaseDetails().getCaseId());
             return payLoad;
-        } else {
+        } catch (WorkflowExceptionWithErrors exceptionWithErrors) {
             log.error("Petition issued callback for case with CASE ID: {} failed",
                 ccdCallbackRequest.getCaseDetails().getCaseId());
-            return issueEventWorkflow.errors();
+            return exceptionWithErrors.errors();
         }
     }
 
@@ -222,16 +222,15 @@ public class CaseOrchestrationServiceImpl implements CaseOrchestrationService {
     public Map<String, Object> ccdCallbackBulkPrintHandler(CcdCallbackRequest ccdCallbackRequest, String authToken)
         throws WorkflowException {
 
-        Map<String, Object> payLoad = ccdCallbackBulkPrintWorkflow.run(ccdCallbackRequest, authToken);
-
-        if (ccdCallbackBulkPrintWorkflow.errors().isEmpty()) {
+        try {
+            Map<String, Object> payLoad = ccdCallbackBulkPrintWorkflow.run(ccdCallbackRequest, authToken);
             log.info("Bulk print callback for case with CASE ID: {} successfully completed",
                 ccdCallbackRequest.getCaseDetails().getCaseId());
             return payLoad;
-        } else {
+        } catch (WorkflowExceptionWithErrors exceptionWithErrors) {
             log.error("Bulk print callback for case with CASE ID: {} failed",
                 ccdCallbackRequest.getCaseDetails().getCaseId());
-            return ccdCallbackBulkPrintWorkflow.errors();
+            return exceptionWithErrors.errors();
         }
     }
 
@@ -242,14 +241,14 @@ public class CaseOrchestrationServiceImpl implements CaseOrchestrationService {
 
     @Override
     public Map<String, Object> submit(Map<String, Object> divorceSession, String authToken) throws WorkflowException {
-        Map<String, Object> payload = submitToCCDWorkflow.run(divorceSession, authToken);
-
-        if (submitToCCDWorkflow.errors().isEmpty()) {
+        try {
+            Map<String, Object> payload = submitToCCDWorkflow.run(divorceSession, authToken);
             log.info("Case with CASE ID: {} submitted", payload.get(ID));
             return payload;
-        } else {
-            log.info("Case with CASE ID: {} submit failed", payload.get(ID));
-            return submitToCCDWorkflow.errors();
+        } catch (WorkflowExceptionWithErrors exceptionWithErrors) {
+//            log.info("Case with CASE ID: {} submit failed", payload.get(ID));//TODO - caseId needed
+            log.info("Case with CASE ID: {} submit failed", exceptionWithErrors.getCaseId());//TODO - caseId needed
+            return exceptionWithErrors.errors();
         }
     }
 
@@ -327,52 +326,36 @@ public class CaseOrchestrationServiceImpl implements CaseOrchestrationService {
     public Map<String, Object> saveDraft(Map<String, Object> payLoad,
                                          String authToken,
                                          String sendEmail) throws WorkflowException {
-        Map<String, Object> response = saveDraftWorkflow.run(payLoad, authToken, sendEmail);
-
-        if (saveDraftWorkflow.errors().isEmpty()) {
+        try {
+            Map<String, Object> response = saveDraftWorkflow.run(payLoad, authToken, sendEmail);
             log.info("Draft saved");
             return response;
-        } else {
+        } catch (WorkflowExceptionWithErrors exceptionWithErrors) {
             log.error("Workflow error saving draft");
-            return saveDraftWorkflow.errors();
+            return exceptionWithErrors.errors();//TODO - we don't even use the return - I could catch the exception and add it to the response - to not risk compatibility issues
         }
-
     }
 
     @Override
     public Map<String, Object> deleteDraft(String authToken) throws WorkflowException {
-        Map<String, Object> response = deleteDraftWorkflow.run(authToken);
-        if (deleteDraftWorkflow.errors().isEmpty()) {
+        try {
+            Map<String, Object> response = deleteDraftWorkflow.run(authToken);
             log.info("Draft deleted");
             return response;
-        } else {
+        } catch (WorkflowExceptionWithErrors exceptionWithErrors) {
             log.error("Workflow error deleting draft");
-            return deleteDraftWorkflow.errors();
+            return exceptionWithErrors.errors();
         }
     }
 
     @Override
     public CaseDataResponse retrieveAosCase(String authorizationToken) throws WorkflowException {
-        Map<String, Object> caseData = retrieveAosCaseWorkflow.run(authorizationToken);
-
-        return CaseDataResponse.builder()
-            .caseId(retrieveAosCaseWorkflow.getCaseId())
-            .state(retrieveAosCaseWorkflow.getCaseState())
-            .court(retrieveAosCaseWorkflow.getCourt())
-            .data(caseData)
-            .build();
+        return retrieveAosCaseWorkflow.run(authorizationToken);
     }
 
     @Override
     public CaseDataResponse getCase(String authorizationToken) throws WorkflowException {
-        Map<String, Object> caseData = getCaseWorkflow.run(authorizationToken);
-
-        return CaseDataResponse.builder()
-            .caseId(getCaseWorkflow.getCaseId())
-            .state(getCaseWorkflow.getCaseState())
-            .court(getCaseWorkflow.getCourt())
-            .data(caseData)
-            .build();
+        return getCaseWorkflow.run(authorizationToken);
     }
 
     @Override
@@ -382,16 +365,15 @@ public class CaseOrchestrationServiceImpl implements CaseOrchestrationService {
 
     @Override
     public CcdCallbackResponse aosReceived(CcdCallbackRequest ccdCallbackRequest, String authToken) throws WorkflowException {
-        Map<String, Object> response = aosRespondedWorkflow.run(ccdCallbackRequest, authToken);
-        log.info("Aos received notification completed with CASE ID: {}.",
-            ccdCallbackRequest.getCaseDetails().getCaseId());
-
-        if (aosRespondedWorkflow.errors().isEmpty()) {
+        try {
+            Map<String, Object> response = aosRespondedWorkflow.run(ccdCallbackRequest, authToken);
+            log.info("Aos received notification completed with CASE ID: {}.",
+                ccdCallbackRequest.getCaseDetails().getCaseId());
             return CcdCallbackResponse.builder()
                 .data(response)
                 .build();
-        } else {
-            Map<String, Object> workflowErrors = aosRespondedWorkflow.errors();
+        } catch (WorkflowExceptionWithErrors exceptionWithErrors) {
+            Map<String, Object> workflowErrors = exceptionWithErrors.errors();
             log.error("Aos received notification with CASE ID: {} failed." + workflowErrors,
                 ccdCallbackRequest.getCaseDetails().getCaseId());
             return CcdCallbackResponse
@@ -403,16 +385,15 @@ public class CaseOrchestrationServiceImpl implements CaseOrchestrationService {
 
     @Override
     public CcdCallbackResponse sendCoRespReceivedNotificationEmail(CcdCallbackRequest ccdCallbackRequest) throws WorkflowException {
-        Map<String, Object> response = sendCoRespondSubmissionNotificationWorkflow.run(ccdCallbackRequest);
-        log.info("Co-respondent received notification completed with CASE ID: {}.",
-            ccdCallbackRequest.getCaseDetails().getCaseId());
-
-        if (sendCoRespondSubmissionNotificationWorkflow.errors().isEmpty()) {
+        try {
+            Map<String, Object> response = sendCoRespondSubmissionNotificationWorkflow.run(ccdCallbackRequest);
+            log.info("Co-respondent received notification completed with CASE ID: {}.",
+                ccdCallbackRequest.getCaseDetails().getCaseId());
             return CcdCallbackResponse.builder()
                 .data(response)
                 .build();
-        } else {
-            Map<String, Object> workflowErrors = sendCoRespondSubmissionNotificationWorkflow.errors();
+        } catch (WorkflowExceptionWithErrors exceptionWithErrors) {
+            Map<String, Object> workflowErrors = exceptionWithErrors.errors();
             log.error("Co-respondent received notification with CASE ID: {} failed." + workflowErrors,
                 ccdCallbackRequest.getCaseDetails().getCaseId());
             return CcdCallbackResponse
@@ -473,17 +454,20 @@ public class CaseOrchestrationServiceImpl implements CaseOrchestrationService {
 
     @Override
     public CcdCallbackResponse sendClarificationSubmittedNotificationEmail(CcdCallbackRequest ccdCallbackRequest) throws WorkflowException {
-        Map<String, Object> workflowResponse = sendClarificationSubmittedNotificationWorkflow.run(ccdCallbackRequest);
+        try {
+            Map<String, Object> workflowResponse = sendClarificationSubmittedNotificationWorkflow.run(ccdCallbackRequest);
 
-        final String caseId = ccdCallbackRequest.getCaseDetails().getCaseId();
-        if (sendClarificationSubmittedNotificationWorkflow.errors().isEmpty()) {
+            final String caseId = ccdCallbackRequest.getCaseDetails().getCaseId();
+
             log.info("Clarification submitted notification for CASE ID: {} successfully completed", caseId);
             return CcdCallbackResponse.builder()
                 .data(workflowResponse)
                 .build();
-        } else {
-            log.error("Clarification submitted notification for  CASE ID: {} failed. ", caseId);
-            List<String> errors = sendClarificationSubmittedNotificationWorkflow.errors().values().stream()
+        } catch (WorkflowExceptionWithErrors exceptionWithErrors) {
+            //TODO - caseId missing
+//            log.error("Clarification submitted notification for  CASE ID: {} failed. ", caseId);//TODO - maybe the way to go about this is to remove it also in the errors method.....
+            log.error("Clarification submitted notification for  CASE ID: {} failed. ", exceptionWithErrors.getCaseId());//TODO - maybe the way to go about this is to remove it also in the errors method.....
+            List<String> errors = exceptionWithErrors.errors().values().stream()
                 .map(x -> (String) x)
                 .collect(Collectors.toList());
             return CcdCallbackResponse.builder()
@@ -494,20 +478,21 @@ public class CaseOrchestrationServiceImpl implements CaseOrchestrationService {
 
     @Override
     public CcdCallbackResponse setOrderSummaryAssignRole(CcdCallbackRequest ccdCallbackRequest, String authToken) throws WorkflowException {
-        String caseId = ccdCallbackRequest.getCaseDetails().getCaseId();
-        Map<String, Object> updatedCase = setOrderSummaryWorkflow.run(ccdCallbackRequest.getCaseDetails().getCaseData());
-        ccdCallbackRequest.getCaseDetails().setCaseData(updatedCase);
-        Map<String, Object> solicitorPayload = petitionerSolicitorRoleWorkflow.run(ccdCallbackRequest, authToken);
 
-        if (petitionerSolicitorRoleWorkflow.errors().isEmpty()) {
+        try {
+            String caseId = ccdCallbackRequest.getCaseDetails().getCaseId();
+            Map<String, Object> updatedCase = setOrderSummaryWorkflow.run(ccdCallbackRequest.getCaseDetails().getCaseData());
+            ccdCallbackRequest.getCaseDetails().setCaseData(updatedCase);
+            Map<String, Object> solicitorPayload = petitionerSolicitorRoleWorkflow.run(ccdCallbackRequest, authToken);
             log.info("Callback to assign [PETSOLICITOR] role with CASE ID: {} successfully completed", caseId);
             return CcdCallbackResponse.builder()
                 .data(solicitorPayload)
                 .build();
-        } else {
-            log.error("Callback to assign [PETSOLICITOR] role with CASE ID: {} failed. ", caseId);
-            List<String> errors = petitionerSolicitorRoleWorkflow.errors().values().stream()
-                .map(x -> (String) x)
+        } catch (WorkflowExceptionWithErrors exceptionWithErrors) {
+//            log.error("Callback to assign [PETSOLICITOR] role with CASE ID: {} failed. ", caseId);//TODO - caseId
+            log.error("Callback to assign [PETSOLICITOR] role with CASE ID: {} failed. ", exceptionWithErrors.getCaseId());//TODO - caseId
+            List<String> errors = exceptionWithErrors.errors().values().stream()
+                .map(String.class::cast)
                 .collect(Collectors.toList());
             return CcdCallbackResponse.builder()
                 .errors(errors)
@@ -518,18 +503,18 @@ public class CaseOrchestrationServiceImpl implements CaseOrchestrationService {
     @Override
     public Map<String, Object> solicitorSubmission(CcdCallbackRequest ccdCallbackRequest,
                                                    String authToken) throws WorkflowException {
-        Map<String, Object> payLoad = solicitorSubmissionWorkflow.run(ccdCallbackRequest, authToken);
 
-        if (solicitorSubmissionWorkflow.errors().isEmpty()) {
+        try {
+            Map<String, Object> payLoad = solicitorSubmissionWorkflow.run(ccdCallbackRequest, authToken);
             log.info("Callback pay by account for solicitor with CASE ID: {} successfully completed",
                 ccdCallbackRequest.getCaseDetails().getCaseId());
             return payLoad;
-        } else {
+        } catch (WorkflowExceptionWithErrors exceptionWithErrors) {
             log.error("Callback pay by account for solicitor with CASE ID: {} failed. ",
                 ccdCallbackRequest
                     .getCaseDetails()
                     .getCaseId());
-            return solicitorSubmissionWorkflow.errors();
+            return exceptionWithErrors.errors();
         }
     }
 
@@ -588,17 +573,17 @@ public class CaseOrchestrationServiceImpl implements CaseOrchestrationService {
 
     @Override
     public CcdCallbackResponse dnSubmitted(CcdCallbackRequest ccdCallbackRequest, String authToken) throws WorkflowException {
-        Map<String, Object> response = dnSubmittedWorkflow.run(ccdCallbackRequest, authToken);
 
-        if (dnSubmittedWorkflow.errors().isEmpty()) {
+        try {
+            Map<String, Object> response = dnSubmittedWorkflow.run(ccdCallbackRequest, authToken);
             log.info("CASE ID: {}. DN submitted notification sent.", ccdCallbackRequest
                 .getCaseDetails()
                 .getCaseId());
             return CcdCallbackResponse.builder()
                 .data(response)
                 .build();
-        } else {
-            Map<String, Object> workflowErrors = dnSubmittedWorkflow.errors();
+        } catch (WorkflowExceptionWithErrors exceptionWithErrors) {
+            Map<String, Object> workflowErrors = exceptionWithErrors.errors();
             log.error("CASE ID: {}. DN submitted notification failed." + workflowErrors, ccdCallbackRequest
                 .getCaseDetails()
                 .getCaseId());
@@ -748,15 +733,13 @@ public class CaseOrchestrationServiceImpl implements CaseOrchestrationService {
     }
 
     @Override
-    public Map<String, Object> processSeparationFields(CcdCallbackRequest ccdCallbackRequest)
-        throws WorkflowException {
-
-        Map<String, Object> payLoad = separationFieldsWorkflow.run(ccdCallbackRequest.getCaseDetails().getCaseData());
-
-        if (separationFieldsWorkflow.errors().isEmpty()) {
+    public Map<String, Object> processSeparationFields(CcdCallbackRequest ccdCallbackRequest) throws WorkflowException {
+        try {
+            Map<String, Object> payLoad = separationFieldsWorkflow.run(ccdCallbackRequest.getCaseDetails().getCaseData());
             return payLoad;
+        } catch (WorkflowExceptionWithErrors exceptionWithErrors) {
+            return exceptionWithErrors.errors();
         }
-        return separationFieldsWorkflow.errors();
     }
 
     @Override
@@ -909,16 +892,16 @@ public class CaseOrchestrationServiceImpl implements CaseOrchestrationService {
 
     @Override
     public CcdCallbackResponse welshContinueIntercept(CcdCallbackRequest ccdCallbackRequest, String authToken) throws WorkflowException {
-        Map<String, Object> response = welshContinueInterceptWorkflow.run(ccdCallbackRequest, authToken);
-        log.info("welshContinueIntercept completed with CASE ID: {}.",
-            ccdCallbackRequest.getCaseDetails().getCaseId());
 
-        if (welshContinueInterceptWorkflow.errors().isEmpty()) {
+        try {
+            Map<String, Object> response = welshContinueInterceptWorkflow.run(ccdCallbackRequest, authToken);
+            log.info("welshContinueIntercept completed with CASE ID: {}.",
+                ccdCallbackRequest.getCaseDetails().getCaseId());
             return CcdCallbackResponse.builder()
                 .data(response)
                 .build();
-        } else {
-            Map<String, Object> workflowErrors = welshContinueInterceptWorkflow.errors();
+        } catch (WorkflowExceptionWithErrors exceptionWithErrors) {
+            Map<String, Object> workflowErrors = exceptionWithErrors.errors();
             log.error("welshContinueInterceptWorkflow with CASE ID: {} failed {}.",
                 ccdCallbackRequest.getCaseDetails().getCaseId(), workflowErrors);
             return CcdCallbackResponse
@@ -930,14 +913,13 @@ public class CaseOrchestrationServiceImpl implements CaseOrchestrationService {
 
     @Override
     public CcdCallbackResponse welshSetPreviousState(CcdCallbackRequest ccdCallbackRequest) throws WorkflowException {
-        Map<String, Object> response = welshSetPreviousStateWorkflow.run(ccdCallbackRequest, authUtil.getCaseworkerToken());
-
-        if (welshSetPreviousStateWorkflow.errors().isEmpty()) {
+        try {
+            Map<String, Object> response = welshSetPreviousStateWorkflow.run(ccdCallbackRequest, authUtil.getCaseworkerToken());
             return CcdCallbackResponse.builder()
                 .data(response)
                 .build();
-        } else {
-            Map<String, Object> workflowErrors = welshSetPreviousStateWorkflow.errors();
+        } catch (WorkflowExceptionWithErrors exceptionWithErrors) {
+            Map<String, Object> workflowErrors = exceptionWithErrors.errors();
             log.error("CASE ID: {} failed {}. ",
                 ccdCallbackRequest.getCaseDetails().getCaseId(), workflowErrors);
             return CcdCallbackResponse

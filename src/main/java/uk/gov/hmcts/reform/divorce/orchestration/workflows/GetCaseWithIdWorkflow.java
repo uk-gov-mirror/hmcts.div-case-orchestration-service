@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.divorce.orchestration.domain.model.ccd.CaseDetails;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.DefaultWorkflow;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.WorkflowException;
+import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.task.DefaultTaskContext;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.task.Task;
 import uk.gov.hmcts.reform.divorce.orchestration.tasks.GetCaseWithIdTask;
 
@@ -23,14 +24,16 @@ public class GetCaseWithIdWorkflow extends DefaultWorkflow<CaseDetails> {
     }
 
     public CaseDetails run(String caseId) throws WorkflowException {
+        DefaultTaskContext taskContext = new DefaultTaskContext();
         this.execute(
             new Task[] {
                 getCaseWithId
             },
+            taskContext,
             null,
             ImmutablePair.of(CASE_ID_JSON_KEY, caseId)
         );
 
-        return (CaseDetails) this.getContext().getTransientObject(CASE_DETAILS_JSON_KEY);
+        return taskContext.getTransientObject(CASE_DETAILS_JSON_KEY);
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.divorce.orchestration.domain.model.ccd.CaseDetails;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.DefaultWorkflow;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.WorkflowException;
+import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.task.DefaultTaskContext;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.task.Task;
 import uk.gov.hmcts.reform.divorce.orchestration.tasks.CopyPetitionerSolicitorDetailsTask;
 import uk.gov.hmcts.reform.divorce.orchestration.tasks.CreateAmendPetitionDraftForRefusalFromCaseIdTask;
@@ -48,6 +49,7 @@ public class CreateNewAmendedCaseAndSubmitToCCDWorkflow extends DefaultWorkflow<
     }
 
     public Map<String, Object> run(CaseDetails caseDetails, String authToken) throws WorkflowException {
+        DefaultTaskContext taskContext = new DefaultTaskContext();
         this.execute(
             new Task[]{
                 createAmendPetitionDraftForRefusalFromCaseId,
@@ -57,6 +59,7 @@ public class CreateNewAmendedCaseAndSubmitToCCDWorkflow extends DefaultWorkflow<
                 solicitorSubmitCaseToCCD,
                 setAmendedCaseIdTask
             },
+            taskContext,
             new HashMap<>(),
             ImmutablePair.of(CASE_ID_JSON_KEY, caseDetails.getCaseId()),
             ImmutablePair.of(CCD_CASE_DATA, caseDetails.getCaseData()),
@@ -64,6 +67,6 @@ public class CreateNewAmendedCaseAndSubmitToCCDWorkflow extends DefaultWorkflow<
             ImmutablePair.of(CASE_EVENT_ID_JSON_KEY, AMEND_PETITION_FOR_REFUSAL_EVENT)
         );
 
-        return getContext().getTransientObject(CCD_CASE_DATA);
+        return taskContext.getTransientObject(CCD_CASE_DATA);
     }
 }

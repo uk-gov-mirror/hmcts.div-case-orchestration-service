@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.divorce.orchestration.domain.model.courts.Court;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.DefaultWorkflow;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.WorkflowException;
+import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.task.DefaultTaskContext;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.task.Task;
 import uk.gov.hmcts.reform.divorce.orchestration.tasks.CourtAllocationTask;
 import uk.gov.hmcts.reform.divorce.orchestration.tasks.DeleteDraft;
@@ -47,6 +48,7 @@ public class SubmitToCCDWorkflow extends DefaultWorkflow<Map<String, Object>> {
     private DeleteDraft deleteDraft;
 
     public Map<String, Object> run(Map<String, Object> payload, String authToken) throws WorkflowException {
+        DefaultTaskContext taskContext = new DefaultTaskContext();
         Map<String, Object> returnFromExecution = this.execute(
             new Task[]{
                 duplicateCaseValidationTask,
@@ -56,12 +58,13 @@ public class SubmitToCCDWorkflow extends DefaultWorkflow<Map<String, Object>> {
                 submitCaseToCCD,
                 deleteDraft
             },
+            taskContext,
             payload,
             ImmutablePair.of(AUTH_TOKEN_JSON_KEY, authToken)
         );
 
         Map<String, Object> response = new HashMap<>(returnFromExecution);
-        Court selectedCourt = getContext().getTransientObject(SELECTED_COURT);
+        Court selectedCourt = taskContext.getTransientObject(SELECTED_COURT);
         response.put(ALLOCATED_COURT_KEY, selectedCourt);
 
         String caseId = String.valueOf(returnFromExecution.get(ID));

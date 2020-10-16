@@ -20,6 +20,7 @@ import uk.gov.hmcts.reform.divorce.orchestration.domain.model.payment.Fee;
 import uk.gov.hmcts.reform.divorce.orchestration.domain.model.payment.Payment;
 import uk.gov.hmcts.reform.divorce.orchestration.domain.model.payment.PaymentUpdate;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.WorkflowException;
+import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.WorkflowExceptionWithErrors;
 import uk.gov.hmcts.reform.divorce.orchestration.service.CaseOrchestrationServiceException;
 import uk.gov.hmcts.reform.divorce.orchestration.service.DocumentTemplateService;
 import uk.gov.hmcts.reform.divorce.orchestration.util.AuthUtil;
@@ -405,10 +406,12 @@ public class CaseOrchestrationServiceImplTest {
 
     @Test
     public void whenRetrieveAosCase_thenProceedAsExpected() throws WorkflowException {
-        when(retrieveAosCaseWorkflow.run(AUTH_TOKEN)).thenReturn(TEST_PAYLOAD_TO_RETURN);
-        when(retrieveAosCaseWorkflow.getCaseId()).thenReturn(TEST_CASE_ID);
-        when(retrieveAosCaseWorkflow.getCaseState()).thenReturn(TEST_STATE);
-        when(retrieveAosCaseWorkflow.getCourt()).thenReturn(TEST_COURT);
+        when(retrieveAosCaseWorkflow.run(AUTH_TOKEN)).thenReturn(CaseDataResponse.builder()
+            .caseId(TEST_CASE_ID)
+            .state(TEST_STATE)
+            .court(TEST_COURT)
+            .data(TEST_PAYLOAD_TO_RETURN)
+            .build());
 
         CaseDataResponse actualResponse = classUnderTest.retrieveAosCase(AUTH_TOKEN);
 
@@ -421,10 +424,12 @@ public class CaseOrchestrationServiceImplTest {
 
     @Test
     public void whenGetCase_thenProceedAsExpected() throws WorkflowException {
-        when(getCaseWorkflow.run(AUTH_TOKEN)).thenReturn(TEST_PAYLOAD_TO_RETURN);
-        when(getCaseWorkflow.getCaseId()).thenReturn(TEST_CASE_ID);
-        when(getCaseWorkflow.getCaseState()).thenReturn(TEST_STATE);
-        when(getCaseWorkflow.getCourt()).thenReturn(TEST_COURT);
+        when(getCaseWorkflow.run(AUTH_TOKEN)).thenReturn(CaseDataResponse.builder()
+            .caseId(TEST_CASE_ID)
+            .state(TEST_STATE)
+            .court(TEST_COURT)
+            .data(TEST_PAYLOAD_TO_RETURN)
+            .build());
 
         CaseDataResponse actualResponse = classUnderTest.getCase(AUTH_TOKEN);
 
@@ -450,10 +455,8 @@ public class CaseOrchestrationServiceImplTest {
     public void givenErrorOnDraftWorkflow_whenSaveDraft_thenReturnErrors() throws WorkflowException {
         Map<String, Object> expectedErrors = mock(Map.class);
         Map<String, Object> payload = mock(Map.class);
-        Map<String, Object> workflowResponsePayload = mock(Map.class);
 
-        when(saveDraftWorkflow.run(payload, AUTH_TOKEN, Boolean.TRUE.toString())).thenReturn(workflowResponsePayload);
-        when(saveDraftWorkflow.errors()).thenReturn(expectedErrors);
+        when(saveDraftWorkflow.run(payload, AUTH_TOKEN, Boolean.TRUE.toString())).thenThrow(new WorkflowExceptionWithErrors("error message", expectedErrors));
 
         assertEquals(expectedErrors, classUnderTest.saveDraft(payload, AUTH_TOKEN, Boolean.TRUE.toString()));
     }
@@ -472,8 +475,7 @@ public class CaseOrchestrationServiceImplTest {
         Map<String, Object> expectedErrors = mock(Map.class);
         Map<String, Object> workflowResponsePayload = mock(Map.class);
 
-        when(deleteDraftWorkflow.run(AUTH_TOKEN)).thenReturn(workflowResponsePayload);
-        when(deleteDraftWorkflow.errors()).thenReturn(expectedErrors);
+        when(deleteDraftWorkflow.run(AUTH_TOKEN)).thenThrow(new WorkflowExceptionWithErrors("error message", expectedErrors));
 
         assertEquals(expectedErrors, classUnderTest.deleteDraft(AUTH_TOKEN));
     }
@@ -499,29 +501,23 @@ public class CaseOrchestrationServiceImplTest {
         expectedPayload.put("returnedKey", "returnedValue");
         expectedPayload.put(ALLOCATED_COURT_KEY, "randomlyAllocatedKey");
         when(submitToCCDWorkflow.run(requestPayload, AUTH_TOKEN)).thenReturn(expectedPayload);
-        when(submitToCCDWorkflow.errors()).thenReturn(Collections.emptyMap());
 
         Map<String, Object> actual = classUnderTest.submit(requestPayload, AUTH_TOKEN);
 
         assertThat(actual.get("returnedKey"), is("returnedValue"));
-        assertThat(actual.get("returnedKey"), is("returnedValue"));
-
         verify(submitToCCDWorkflow).run(requestPayload, AUTH_TOKEN);
-        verify(submitToCCDWorkflow).errors();
     }
 
     @Test
     public void givenCaseDataInvalid_whenSubmit_thenReturnListOfErrors() throws Exception {
-        when(submitToCCDWorkflow.run(requestPayload, AUTH_TOKEN)).thenReturn(expectedPayload);
         Map<String, Object> errors = singletonMap("new_Error", "An Error");
-        when(submitToCCDWorkflow.errors()).thenReturn(errors);
+        when(submitToCCDWorkflow.run(requestPayload, AUTH_TOKEN)).thenThrow(new WorkflowExceptionWithErrors("error message", errors));
 
         Map<String, Object> actual = classUnderTest.submit(requestPayload, AUTH_TOKEN);
 
         assertEquals(errors, actual);
 
         verify(submitToCCDWorkflow).run(requestPayload, AUTH_TOKEN);
-        verify(submitToCCDWorkflow, times(2)).errors();
     }
 
     @Test
@@ -778,17 +774,14 @@ public class CaseOrchestrationServiceImplTest {
 
     @Test
     public void givenCaseDataInvalid_whenProcessPbaPayment_thenReturnListOfErrors() throws Exception {
-        when(solicitorSubmissionWorkflow.run(ccdCallbackRequest, AUTH_TOKEN))
-            .thenReturn(requestPayload);
         Map<String, Object> errors = Collections.singletonMap("new_Error", "An Error");
-        when(solicitorSubmissionWorkflow.errors()).thenReturn(errors);
+        when(solicitorSubmissionWorkflow.run(ccdCallbackRequest, AUTH_TOKEN)).thenThrow(new WorkflowExceptionWithErrors("error message", errors));
 
         Map<String, Object> actual = classUnderTest.solicitorSubmission(ccdCallbackRequest, AUTH_TOKEN);
 
         assertEquals(errors, actual);
 
         verify(solicitorSubmissionWorkflow).run(ccdCallbackRequest, AUTH_TOKEN);
-        verify(solicitorSubmissionWorkflow, times(2)).errors();
     }
 
     @Test
@@ -911,13 +904,10 @@ public class CaseOrchestrationServiceImplTest {
 
     @Test
     public void givenError_whenExecuteDnSubmittedWorkflow_thenReturnErrorData() throws WorkflowException {
-
         Map<String, Object> workflowError = singletonMap("ErrorKey", "Error value");
         when(dnSubmittedWorkflow
             .run(ccdCallbackRequest, AUTH_TOKEN))
-            .thenReturn(ccdCallbackRequest.getCaseDetails().getCaseData());
-
-        when(dnSubmittedWorkflow.errors()).thenReturn(workflowError);
+            .thenThrow(new WorkflowExceptionWithErrors("error message", workflowError));
 
         CcdCallbackResponse expectedResponse = CcdCallbackResponse.builder()
             .errors(Collections.singletonList("Error value"))
@@ -1701,8 +1691,7 @@ public class CaseOrchestrationServiceImplTest {
     @Test
     public void shouldReturnError_whenWorkflowExecutedWithErrors() throws WorkflowException {
         Map<String, Object> errorMap = ImmutableMap.of("ErrorKey", "ErrorValue");
-        when(sendClarificationSubmittedNotificationWorkflow.run(ccdCallbackRequest)).thenReturn(requestPayload);
-        when(sendClarificationSubmittedNotificationWorkflow.errors()).thenReturn(errorMap);
+        when(sendClarificationSubmittedNotificationWorkflow.run(ccdCallbackRequest)).thenThrow(new WorkflowExceptionWithErrors("error message", errorMap));
         assertThat(classUnderTest.sendClarificationSubmittedNotificationEmail(ccdCallbackRequest),
             is(CcdCallbackResponse.builder()
                 .errors(Collections.singletonList("ErrorValue"))
@@ -1727,9 +1716,7 @@ public class CaseOrchestrationServiceImplTest {
         Map<String, Object> caseData = Collections.EMPTY_MAP;
         CaseDetails caseDetails = CaseDetails.builder().caseId("999").build();
         ccdCallbackRequest = CcdCallbackRequest.builder().caseDetails(caseDetails).build();
-        when(welshContinueInterceptWorkflow.run(ccdCallbackRequest, authUtil.getCaseworkerToken()))
-            .thenReturn(caseData);
-        when(welshContinueInterceptWorkflow.errors()).thenReturn(Collections.EMPTY_MAP);
+        when(welshContinueInterceptWorkflow.run(ccdCallbackRequest, authUtil.getCaseworkerToken())).thenReturn(caseData);
 
         CcdCallbackResponse ccdCallbackResponse = classUnderTest.welshContinueIntercept(ccdCallbackRequest, authUtil.getCaseworkerToken());
 
@@ -1742,8 +1729,7 @@ public class CaseOrchestrationServiceImplTest {
         ccdCallbackRequest = CcdCallbackRequest.builder().caseDetails(caseDetails).build();
 
         Map<String, Object> workflowErrors = ImmutableMap.of("Key1", "value1", "key2", "value2", "key3", "value3");
-
-        when(welshContinueInterceptWorkflow.errors()).thenReturn(workflowErrors);
+        when(welshContinueInterceptWorkflow.run(ccdCallbackRequest, authUtil.getCaseworkerToken())).thenThrow(new WorkflowExceptionWithErrors("error message", workflowErrors));
 
         CcdCallbackResponse ccdCallbackResponse = classUnderTest.welshContinueIntercept(ccdCallbackRequest, authUtil.getCaseworkerToken());
 
@@ -1759,9 +1745,7 @@ public class CaseOrchestrationServiceImplTest {
         CaseDetails caseDetails = CaseDetails.builder().caseId("999").build();
         ccdCallbackRequest = CcdCallbackRequest.builder().caseDetails(caseDetails).build();
         when(authUtil.getCaseworkerToken()).thenReturn("AUTH_TOKEN");
-        when(welshSetPreviousStateWorkflow.run(ccdCallbackRequest, authUtil.getCaseworkerToken()))
-            .thenReturn(caseData);
-        when(welshSetPreviousStateWorkflow.errors()).thenReturn(Collections.EMPTY_MAP);
+        when(welshSetPreviousStateWorkflow.run(ccdCallbackRequest, authUtil.getCaseworkerToken())).thenReturn(caseData);
 
         CcdCallbackResponse ccdCallbackResponse = classUnderTest.welshSetPreviousState(ccdCallbackRequest);
 
@@ -1774,8 +1758,7 @@ public class CaseOrchestrationServiceImplTest {
         ccdCallbackRequest = CcdCallbackRequest.builder().caseDetails(caseDetails).build();
         when(authUtil.getCaseworkerToken()).thenReturn("AUTH_TOKEN");
         Map<String, Object> workflowErrors = ImmutableMap.of("Key1", "value1", "key2", "value2", "key3", "value3");
-
-        when(welshSetPreviousStateWorkflow.errors()).thenReturn(workflowErrors);
+        when(welshSetPreviousStateWorkflow.run(ccdCallbackRequest, authUtil.getCaseworkerToken())).thenThrow(new WorkflowExceptionWithErrors("error message", workflowErrors));
 
         CcdCallbackResponse ccdCallbackResponse = classUnderTest.welshSetPreviousState(ccdCallbackRequest);
 

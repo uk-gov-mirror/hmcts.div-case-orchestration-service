@@ -11,6 +11,7 @@ import java.util.Map;
 @Builder
 @EqualsAndHashCode
 public class CaseDataResponse {
+
     private String caseId;
 
     @JsonProperty("courts")//Keeping existing name in JSON property, but using more sensible name for Java object

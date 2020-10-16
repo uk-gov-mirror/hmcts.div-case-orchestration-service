@@ -10,7 +10,16 @@ import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.task.Default
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.task.Task;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.task.TaskException;
 
+import java.util.Map;
+
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasEntry;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 
 @RunWith(SpringRunner.class)
 public class DefaultWorkflowTest {
@@ -35,6 +44,7 @@ public class DefaultWorkflowTest {
         };
 
         assertEquals("123", defaultWorkflow.execute(tasks, payload));
+        assertThat(defaultWorkflow.getContext(), is(nullValue()));
     }
 
     @Test
@@ -71,7 +81,7 @@ public class DefaultWorkflowTest {
     public void executeWillSetOptionalPairsIntoTheContext() throws Exception {
         Task<String> task = (context, payload) -> context.getTransientObject("testKey").toString();
 
-        Task[] tasks = new Task[] { task };
+        Task[] tasks = new Task[] {task};
 
         Pair pair = new ImmutablePair<>("testKey", "testValue");
 
@@ -84,11 +94,31 @@ public class DefaultWorkflowTest {
     }
 
     @Test(expected = WorkflowException.class)
-    public void executeShouldThrowExceptionWhenATaskExceptionIsThrown() throws Exception {
-        Task[] tasks = new Task[] { (context, payload) -> {
-            throw new TaskException("Error"); }
+    public void executeShouldThrowExceptionWhenATaskExceptionIsThrown_AndNoErrorsWereSetInContext() throws Exception {
+        Task[] tasks = new Task[] {(context, payload) -> {
+            throw new TaskException("Error");
+        }
         };
         defaultWorkflow.execute(tasks, payload);
+    }
+
+    @Test
+    public void executeShouldThrowExceptionWithErrors_WhenATaskExceptionIsThrown_AndErrorsWereSetInContext() {
+        TaskException testTaskException = new TaskException("Error");
+        Task[] tasks = new Task[] {(context, payload) -> {
+            context.setTransientObject("Test_Error", "this error was set into the context");
+            throw testTaskException;
+        }
+        };
+        WorkflowExceptionWithErrors workflowExceptionWithErrors =
+            assertThrows(WorkflowExceptionWithErrors.class, () -> defaultWorkflow.execute(tasks, payload));
+
+        assertThat(workflowExceptionWithErrors.getMessage(), is("Workflow execution has generated errors"));
+        assertThat(workflowExceptionWithErrors.errors().get("Test_Error"), is("this error was set into the context"));
+        Throwable primaryCause = workflowExceptionWithErrors.getCause();
+        assertThat(primaryCause, is(instanceOf(WorkflowException.class)));
+        Throwable secondaryCause = primaryCause.getCause();
+        assertThat(secondaryCause, is(testTaskException));
     }
 
     @Test
@@ -102,18 +132,17 @@ public class DefaultWorkflowTest {
             taskOne
         };
 
-        defaultWorkflow.execute(tasks, payload);
-
-        assertEquals(0, defaultWorkflow.errors().size());
+        String returnedPayload = defaultWorkflow.execute(tasks, payload);
+        assertThat(returnedPayload, is(payload));
+        assertThat(defaultWorkflow.getContext(), is(nullValue()));
     }
 
     @Test
-    public void errorsShouldReturnListOfErrorsWhenErrorsAreInContext() throws Exception {
+    public void errorsShouldReturnListOfErrorsWhenErrorsAreInContext() {
         Task<String> taskOne = (context, payload) -> {
             context.setTransientObject("one_Error", "error");
             return payload;
         };
-
         Task<String> taskTwo = (context, payload) -> {
             context.setTransientObject("two_Error", "error");
             return payload;
@@ -123,8 +152,17 @@ public class DefaultWorkflowTest {
             taskOne, taskTwo
         };
 
-        defaultWorkflow.execute(tasks, payload);
+        WorkflowExceptionWithErrors workflowException =
+            assertThrows(WorkflowExceptionWithErrors.class, () -> defaultWorkflow.execute(tasks, payload));
 
-        assertEquals(2, defaultWorkflow.errors().size());
+        assertThat(workflowException.getMessage(), is("Workflow execution has generated errors"));
+        Map<String, Object> errors = workflowException.errors();
+        assertThat(errors.size(), is(2));
+        assertThat(errors, allOf(
+            hasEntry("one_Error", "error"),
+            hasEntry("two_Error", "error")
+        ));
+        assertThat(defaultWorkflow.getContext(), is(nullValue()));
     }
+
 }

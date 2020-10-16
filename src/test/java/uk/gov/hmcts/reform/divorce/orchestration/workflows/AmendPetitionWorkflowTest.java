@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.WorkflowException;
+import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.task.DefaultTaskContext;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.task.Task;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.task.TaskContext;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.task.TaskException;
@@ -27,7 +28,12 @@ import static org.mockito.AdditionalMatchers.aryEq;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.divorce.orchestration.domain.model.OrchestrationConstants.AMEND_PETITION_EVENT;
+import static uk.gov.hmcts.reform.divorce.orchestration.domain.model.OrchestrationConstants.AUTH_TOKEN_JSON_KEY;
+import static uk.gov.hmcts.reform.divorce.orchestration.domain.model.OrchestrationConstants.CASE_EVENT_ID_JSON_KEY;
+import static uk.gov.hmcts.reform.divorce.orchestration.domain.model.OrchestrationConstants.CASE_ID_JSON_KEY;
 import static uk.gov.hmcts.reform.divorce.orchestration.domain.model.OrchestrationConstants.NEW_AMENDED_PETITION_DRAFT_KEY;
+import static uk.gov.hmcts.reform.divorce.orchestration.util.TaskContextMatcher.aTaskContextWithGivenEntries;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AmendPetitionWorkflowTest {
@@ -75,9 +81,15 @@ public class AmendPetitionWorkflowTest {
             hasEntry("courtList", "allCourts")
         ));
         verify(classUnderTest).execute(aryEq(new Task[] {
-            amendPetitionDraft,
-            updateCaseInCCD
-        }), any(Map.class), any(), any(), any());
+                amendPetitionDraft,
+                updateCaseInCCD
+            }),
+            aTaskContextWithGivenEntries(Map.of(
+                CASE_ID_JSON_KEY, "testCaseId",
+                AUTH_TOKEN_JSON_KEY, "testToken",
+                CASE_EVENT_ID_JSON_KEY, AMEND_PETITION_EVENT
+            )),
+            any(Map.class), any(), any(), any());
     }
 
 }

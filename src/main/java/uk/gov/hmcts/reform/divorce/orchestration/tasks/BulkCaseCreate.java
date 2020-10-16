@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
-import static uk.gov.hmcts.reform.divorce.orchestration.domain.model.BulkCaseConstants.BULKCASE_CREATION_ERROR;
 import static uk.gov.hmcts.reform.divorce.orchestration.domain.model.BulkCaseConstants.BULK_CASE_ACCEPTED_LIST_KEY;
 import static uk.gov.hmcts.reform.divorce.orchestration.domain.model.BulkCaseConstants.BULK_CASE_LIST_KEY;
 import static uk.gov.hmcts.reform.divorce.orchestration.domain.model.BulkCaseConstants.BULK_CASE_TITLE_KEY;
@@ -57,7 +56,7 @@ public class BulkCaseCreate implements Task<Map<String, Object>> {
 
     @Override
     public Map<String, Object> execute(TaskContext context, Map<String, Object> payload) {
-        List<SearchResult> searchResultList =  context.getTransientObject(SEARCH_RESULT_KEY);
+        List<SearchResult> searchResultList = context.getTransientObject(SEARCH_RESULT_KEY);
         if (CollectionUtils.isEmpty(searchResultList)) {
             log.info("There is no cases to process");
             context.setTaskFailed(true);
@@ -88,9 +87,6 @@ public class BulkCaseCreate implements Task<Map<String, Object>> {
         });
         Map<String, Object> cases = new HashMap<>();
         cases.put(BULK_CASE_LIST_KEY, bulkCases);
-        if (!errors.isEmpty()) {
-            context.setTransientObject(BULKCASE_CREATION_ERROR, errors);
-        }
         return cases;
     }
 
@@ -101,7 +97,7 @@ public class BulkCaseCreate implements Task<Map<String, Object>> {
             .collect(toList());
 
         List<Map<String, Object>> acceptedCasesList = caseList.stream()
-            .map(entry -> (Map<String, Object>)entry.get(VALUE_KEY))
+            .map(entry -> (Map<String, Object>) entry.get(VALUE_KEY))
             .map(entry -> entry.get(CASE_REFERENCE_FIELD))
             .map(entry -> ImmutableMap.of(VALUE_KEY, entry))
             .collect(toList());
@@ -126,7 +122,7 @@ public class BulkCaseCreate implements Task<Map<String, Object>> {
     }
 
     private Map<String, Object> getCaseLink(CaseDetails caseDetails) {
-        return  ImmutableMap.of(CASE_REFERENCE_FIELD, caseDetails.getCaseId());
+        return ImmutableMap.of(CASE_REFERENCE_FIELD, caseDetails.getCaseId());
     }
 
     private String getCaseParties(CaseDetails caseDetails) {
@@ -136,7 +132,7 @@ public class BulkCaseCreate implements Task<Map<String, Object>> {
         String respondentFirstName = (String) caseDetails.getCaseData().get(RESP_FIRST_NAME_CCD_FIELD);
         String respondentLastName = (String) caseDetails.getCaseData().get(RESP_LAST_NAME_CCD_FIELD);
 
-        return  String.format("%s %s vs %s %s", petitionerFirstName, petitionerLastName, respondentFirstName,
+        return String.format("%s %s vs %s %s", petitionerFirstName, petitionerLastName, respondentFirstName,
             respondentLastName);
     }
 

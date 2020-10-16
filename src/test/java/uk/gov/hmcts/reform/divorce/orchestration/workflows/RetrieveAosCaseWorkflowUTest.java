@@ -7,6 +7,7 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import uk.gov.hmcts.reform.divorce.orchestration.domain.model.CaseDataResponse;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.WorkflowException;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.task.TaskContext;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.task.TaskException;
@@ -71,12 +72,12 @@ public class RetrieveAosCaseWorkflowUTest {
             });
         mockTasksExecution(fetchedCaseData, generalOrdersFilterTask, caseDataToDivorceFormatter, addCourtsToPayloadTask);
 
-        Map<String, Object> returnedCaseData = classUnderTest.run(AUTH_TOKEN);
+        CaseDataResponse caseDataResponse = classUnderTest.run(AUTH_TOKEN);
 
-        assertThat(returnedCaseData, is(fetchedCaseData));
-        assertThat(classUnderTest.getCaseId(), is(TEST_CASE_ID));
-        assertThat(classUnderTest.getCaseState(), is(TEST_STATE));
-        assertThat(classUnderTest.getCourt(), is(TEST_COURT));
+        assertThat(caseDataResponse.getData(), is(fetchedCaseData));
+        assertThat(caseDataResponse.getCaseId(), is(TEST_CASE_ID));
+        assertThat(caseDataResponse.getState(), is(TEST_STATE));
+        assertThat(caseDataResponse.getCourt(), is(TEST_COURT));
 
         verify(retrieveAosCase).execute(taskContextArgumentCaptor.capture(), isNull());
         TaskContext originatingTaskContext = taskContextArgumentCaptor.getValue();

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.DefaultWorkflow;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.WorkflowException;
+import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.task.DefaultTaskContext;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.task.Task;
 import uk.gov.hmcts.reform.divorce.orchestration.tasks.SearchCasesDAOverdueTask;
 import uk.gov.hmcts.reform.divorce.orchestration.tasks.UpdateDAOverdueCase;
@@ -32,16 +33,19 @@ public class UpdateDAOverdueWorkflow extends DefaultWorkflow<Map<String, Object>
     }
 
     public int run(String authToken) throws WorkflowException {
+        DefaultTaskContext taskContext = new DefaultTaskContext();
         this.execute(
             new Task[] {
                 searchCasesDAOverdueTask,
                 updateDAOverdueCase,
             },
+            taskContext,
             null,
             ImmutablePair.of(AUTH_TOKEN_JSON_KEY, authToken),
             ImmutablePair.of(CASES_OVERDUE_FOR_DA_PROCESSED_COUNT, 0),
             ImmutablePair.of(CASE_EVENT_ID_JSON_KEY, MAKE_CASE_DA_OVERDUE_EVENT_ID)
         );
-        return getContext().getTransientObject(CASES_OVERDUE_FOR_DA_PROCESSED_COUNT);
+        return taskContext.getTransientObject(CASES_OVERDUE_FOR_DA_PROCESSED_COUNT);
     }
+
 }

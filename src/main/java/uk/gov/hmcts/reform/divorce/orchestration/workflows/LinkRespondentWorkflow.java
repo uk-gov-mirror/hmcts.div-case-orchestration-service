@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.DefaultWorkflow;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.WorkflowException;
+import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.WorkflowExceptionWithErrors;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.task.Task;
 import uk.gov.hmcts.reform.divorce.orchestration.tasks.GetCaseWithIdTask;
 import uk.gov.hmcts.reform.divorce.orchestration.tasks.LinkRespondent;
@@ -57,18 +58,19 @@ public class LinkRespondentWorkflow extends DefaultWorkflow<UserDetails> {
                 ImmutablePair.of(AUTH_TOKEN_JSON_KEY, authToken),
                 ImmutablePair.of(CASE_ID_JSON_KEY, caseId)
             );
-        } catch (WorkflowException e) {
-            if (this.errors().containsKey(UPDATE_RESPONDENT_DATA_ERROR_KEY)) {
+        } catch (WorkflowExceptionWithErrors exceptionWithErrors) {
+            if (exceptionWithErrors.errors().containsKey(UPDATE_RESPONDENT_DATA_ERROR_KEY)) {
                 rollbackOperation(userDetail, caseId, authToken);
             }
-            throw e;
+            WorkflowException cause = (WorkflowException) exceptionWithErrors.getCause();//TODO - maybe we should have a method to return WorkflowException
+            throw cause;
         }
     }
 
     private void rollbackOperation(UserDetails userDetail, String caseId, String authToken) throws WorkflowException {
         log.error("Cannot link respondent for caseId {} and user {}", caseId, userDetail.getId());
         this.execute(
-            new Task[]{
+            new Task[] {
                 unlinkRespondent
             },
             userDetail,
