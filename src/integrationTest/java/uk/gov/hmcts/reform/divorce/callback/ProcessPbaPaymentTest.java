@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.divorce.callback;
 import io.restassured.response.Response;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import uk.gov.hmcts.reform.divorce.context.IntegrationTest;
 import uk.gov.hmcts.reform.divorce.model.ccd.Document;
 import uk.gov.hmcts.reform.divorce.orchestration.domain.model.ccd.CollectionMember;
@@ -14,6 +15,7 @@ import java.util.Map;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static uk.gov.hmcts.reform.divorce.callback.SolicitorCreateAndUpdateTest.postWithDataAndValidateResponse;
@@ -41,6 +43,18 @@ public class ProcessPbaPaymentTest extends IntegrationTest {
         assertThat(responseData.get(PBA_NUMBERS), notNullValue());
         assertThat(responseData.get(ProcessPbaPaymentTask.PAYMENT_STATUS), nullValue());
         assertNoPetitionOnDocumentGeneratedList((List) responseData.get(D8DOCUMENTS_GENERATED));
+    }
+
+    @Test
+    public void givenCallbackRequestWhenProcessPbaPaymentThenReturnDataWithErrors() throws Exception {
+        Response response = postWithDataAndValidateResponse(
+            serverUrl + contextPath,
+            PAYLOAD_CONTEXT_PATH + "solicitor-request-invalid-data.json",
+            createCaseWorkerUser().getAuthToken()
+        );
+
+        Map<String, Object> responseData = response.getBody().path(DATA);
+        assertThat(response.getStatusCode(),is(HttpStatus.BAD_REQUEST));
     }
 
     private static void assertNoPetitionOnDocumentGeneratedList(List<CollectionMember<Document>> documents) {
