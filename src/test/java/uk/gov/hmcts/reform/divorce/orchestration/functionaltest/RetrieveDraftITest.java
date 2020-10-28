@@ -40,7 +40,6 @@ public class RetrieveDraftITest extends IdamTestSupport {
     private static final String CMS_CONTEXT_PATH = "/casemaintenance/version/1/retrieveCase";
     private static final String CMS_UPDATE_CASE_PATH =
         "/casemaintenance/version/1/updateCase/1547073120300616/paymentMade";
-    private static final String CFS_CONTEXT_PATH = "/caseformatter/version/1/to-divorce-format";//TODO - remove
 
     private static final String CARD_PAYMENT_PATH = "/card-payments/RC-1547-0733-1813-9545";
     private static final String USER_TOKEN = "Some JWT Token";
@@ -91,9 +90,7 @@ public class RetrieveDraftITest extends IdamTestSupport {
     }
 
     @Test
-    public void givenEverythingWorksAsExpected_whenCmsCalled_thenReturnDraft()
-        throws Exception {
-
+    public void givenEverythingWorksAsExpected_whenCmsCalled_thenReturnDraft() throws Exception {
         CASE_DATA.put("deaftProperty1", "value1");
         CASE_DATA.put("deaftProperty2", "value2");
         CASE_DATA.put(IS_DRAFT_KEY, true);
@@ -101,7 +98,6 @@ public class RetrieveDraftITest extends IdamTestSupport {
         CaseDetails caseDetails = CaseDetails.builder().caseData(CASE_DATA).build();
 
         stubCmsServerEndpoint(CMS_CONTEXT_PATH, HttpStatus.OK, convertObjectToJsonString(caseDetails), HttpMethod.GET);
-        stubCfsServerEndpoint(convertObjectToJsonString(CASE_DATA));
 
         Map<String, Object> expectedResponse = Maps.newHashMap(CASE_DATA);
         expectedResponse.put("fetchedDraft", true);
@@ -116,12 +112,10 @@ public class RetrieveDraftITest extends IdamTestSupport {
 
     @Test
     public void givenCaseWithCaseId_whenCmsCalled_thenReturnCase() throws Exception {
-
         CASE_DATA.put("deaftProperty1", "value1");
         CASE_DATA.put("deaftProperty2", "value2");
         CASE_DATA.put(IS_DRAFT_KEY, true);
         stubCmsServerEndpoint(CMS_CONTEXT_PATH, HttpStatus.OK, convertObjectToJsonString(CASE_DETAILS), HttpMethod.GET);
-        stubCfsServerEndpoint(convertObjectToJsonString(CASE_DATA));
 
         Map<String, Object> expectedResponse = Maps.newHashMap(CASE_DATA);
 
@@ -139,7 +133,6 @@ public class RetrieveDraftITest extends IdamTestSupport {
         String caseDetails = ResourceLoader.loadResourceAsString(caseDetailsPath);
 
         stubCmsServerEndpoint(CMS_CONTEXT_PATH, HttpStatus.OK, caseDetails, HttpMethod.GET);
-        stubCfsServerEndpoint(caseDetails);
         stubServiceAuthProvider(HttpStatus.OK, TEST_SERVICE_AUTH_TOKEN);
 
         String paymentPath = "jsonExamples/payloads/paymentSystemPaid.json";
@@ -166,14 +159,6 @@ public class RetrieveDraftITest extends IdamTestSupport {
         maintenanceServiceServer.stubFor(WireMock.request(method.name(), urlEqualTo(path))
             .willReturn(aResponse()
                 .withStatus(status.value())
-                .withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE)
-                .withBody(body)));
-    }
-
-    private void stubCfsServerEndpoint(String body) {
-        formatterServiceServer.stubFor(WireMock.post(CFS_CONTEXT_PATH)
-            .willReturn(aResponse()
-                .withStatus(HttpStatus.OK.value())
                 .withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                 .withBody(body)));
     }
