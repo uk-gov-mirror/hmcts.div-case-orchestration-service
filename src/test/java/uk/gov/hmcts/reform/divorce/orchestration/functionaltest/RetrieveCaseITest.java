@@ -1,24 +1,29 @@
 package uk.gov.hmcts.reform.divorce.orchestration.functionaltest;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.matching.EqualToPattern;
 import org.junit.Before;
 import org.junit.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
+import uk.gov.hmcts.reform.divorce.model.ccd.CoreCaseData;
+import uk.gov.hmcts.reform.divorce.model.usersession.DivorceSession;
 import uk.gov.hmcts.reform.divorce.orchestration.domain.model.CaseDataResponse;
 import uk.gov.hmcts.reform.divorce.orchestration.domain.model.ccd.CaseDetails;
 import uk.gov.hmcts.reform.divorce.orchestration.domain.model.idam.UserDetails;
 import uk.gov.hmcts.reform.divorce.orchestration.testutil.CourtsMatcher;
 
-import java.util.Collections;
+import java.io.IOException;
 import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;
+import static com.jayway.jsonpath.matchers.JsonPathMatchers.isJson;
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.HttpStatus.OK;
@@ -33,29 +38,40 @@ import static uk.gov.hmcts.reform.divorce.orchestration.TestConstants.TEST_COURT
 import static uk.gov.hmcts.reform.divorce.orchestration.TestConstants.TEST_EMAIL;
 import static uk.gov.hmcts.reform.divorce.orchestration.TestConstants.TEST_ERROR;
 import static uk.gov.hmcts.reform.divorce.orchestration.TestConstants.TEST_STATE;
-import static uk.gov.hmcts.reform.divorce.orchestration.domain.model.OrchestrationConstants.D_8_DIVORCE_UNIT;
+import static uk.gov.hmcts.reform.divorce.orchestration.testutil.DataTransformationTestHelper.getExpectedTranslatedDivorceSessionData;
+import static uk.gov.hmcts.reform.divorce.orchestration.testutil.DataTransformationTestHelper.getExpectedTranslatedDivorceSessionJsonAsMap;
+import static uk.gov.hmcts.reform.divorce.orchestration.testutil.DataTransformationTestHelper.getTestCoreCaseData;
 import static uk.gov.hmcts.reform.divorce.orchestration.testutil.ObjectMapperTestUtil.convertObjectToJsonString;
+import static uk.gov.hmcts.reform.divorce.orchestration.testutil.ObjectMapperTestUtil.getObjectMapperInstance;
 
 public class RetrieveCaseITest extends IdamTestSupport {
 
     private static final String API_URL = "/retrieve-case";
     private static final String GET_CASE_CONTEXT_PATH = "/casemaintenance/version/1/case";
-    private static final String FORMAT_TO_DIVORCE_CONTEXT_PATH = "/caseformatter/version/1/to-divorce-format";//TODO - remove
 
-    private static final Map<String, Object> CASE_DATA = Collections.singletonMap(D_8_DIVORCE_UNIT, TEST_COURT);
-    private static final CaseDetails CASE_DETAILS =
-        CaseDetails.builder()
-            .caseId(TEST_CASE_ID)
-            .state(TEST_STATE)
-            .caseData(CASE_DATA)
-            .build();
+    private CaseDetails caseDetails;
+
+    private CoreCaseData testCcdData;
+    private DivorceSession expectedTranslatedDivorceSessionData;
 
     @Autowired
     private MockMvc webClient;
 
     @Before
-    public void setUp() {
+    public void setUp() throws IOException {
         stubUserDetailsEndpoint(OK, AUTH_TOKEN, convertObjectToJsonString(UserDetails.builder().email(TEST_EMAIL).build()));
+        testCcdData = getTestCoreCaseData();
+        expectedTranslatedDivorceSessionData = getExpectedTranslatedDivorceSessionData();//TODO - do I need this method?
+
+        Map<String, Object> testCcdDataMap = getObjectMapperInstance().readValue(convertObjectToJsonString(testCcdData), new TypeReference<Map<String, Object>>() {
+        });//TODO - get it passing, then refactor
+
+        caseDetails =
+            CaseDetails.builder()
+                .caseId(TEST_CASE_ID)
+                .state(TEST_STATE)
+                .caseData(testCcdDataMap)
+                .build();
     }
 
     @Test
@@ -88,9 +104,9 @@ public class RetrieveCaseITest extends IdamTestSupport {
 
     @Test
     public void givenCFSThrowsException_whenGetCase_thenPropagateException() throws Exception {
-        stubGetCaseFromCMS(CASE_DETAILS);
+        stubGetCaseFromCMS(caseDetails);
 
-        stubFormatterServerEndpoint(HttpStatus.INTERNAL_SERVER_ERROR, TEST_ERROR);
+//        stubFormatterServerEndpoint(HttpStatus.INTERNAL_SERVER_ERROR, TEST_ERROR);//TODO - how do we solve this?
 
         webClient.perform(get(API_URL)
             .header(AUTHORIZATION, AUTH_TOKEN)
@@ -112,23 +128,29 @@ public class RetrieveCaseITest extends IdamTestSupport {
 
     @Test
     public void givenAllGoesWellProceedAsExpected_RetrieveCaseInformation() throws Exception {
-        stubGetCaseFromCMS(CASE_DETAILS);
+        stubGetCaseFromCMS(caseDetails);
 
-        stubFormatterServerEndpoint();
+        Map<String, Object> expectedTranslatedDivorceSessionDataAsMap = getExpectedTranslatedDivorceSessionJsonAsMap();//TODO - get it passing, then refactor
 
-        CaseDataResponse expected = CaseDataResponse.builder()
-            .data(CASE_DATA)
+        CaseDataResponse expectedCaseDataResponse = CaseDataResponse.builder()
+            .data(expectedTranslatedDivorceSessionDataAsMap)
             .caseId(TEST_CASE_ID)
             .state(TEST_STATE)
             .court(TEST_COURT)
             .build();
 
-        webClient.perform(get(API_URL)
+        String responseBody = webClient.perform(get(API_URL)
             .header(AUTHORIZATION, AUTH_TOKEN)
             .accept(APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(content().json(convertObjectToJsonString(expected)))
-            .andExpect(content().string(hasJsonPath("$.data.court", CourtsMatcher.isExpectedCourtsList())));
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
+
+        assertThat(responseBody, isJson());
+        assertThat(responseBody, hasJsonPath("$.data.court", CourtsMatcher.isExpectedCourtsList()));
+        JSONAssert.assertEquals(convertObjectToJsonString(expectedCaseDataResponse), responseBody, false);//TODO - try strict when this works?
+//            .andExpect(content().json(convertObjectToJsonString(expectedCaseDataResponse)))//TODO - might be better  to write the json matchers
     }
 
     private void stubGetCaseFromCMS(CaseDetails caseDetails) {
@@ -148,16 +170,4 @@ public class RetrieveCaseITest extends IdamTestSupport {
         stubGetCaseFromCMS(HttpStatus.MULTIPLE_CHOICES, "");
     }
 
-    private void stubFormatterServerEndpoint() {
-        stubFormatterServerEndpoint(OK, convertObjectToJsonString(CASE_DATA));
-    }
-
-    private void stubFormatterServerEndpoint(HttpStatus status, String message) {
-        formatterServiceServer.stubFor(WireMock.post(FORMAT_TO_DIVORCE_CONTEXT_PATH)
-            .withRequestBody(equalToJson(convertObjectToJsonString(CASE_DATA)))
-            .willReturn(aResponse()
-                .withStatus(status.value())
-                .withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE)
-                .withBody(message)));
-    }
 }
