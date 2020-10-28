@@ -43,7 +43,7 @@ public class RetrieveAosCaseITest extends IdamTestSupport {
 
     private static final String API_URL = "/retrieve-aos-case";
     private static final String RETRIEVE_AOS_CASE_CONTEXT_PATH = "/casemaintenance/version/1/retrieveAosCase";
-    private static final String FORMAT_TO_DIVORCE_CONTEXT_PATH = "/caseformatter/version/1/to-divorce-format";
+    private static final String FORMAT_TO_DIVORCE_CONTEXT_PATH = "/caseformatter/version/1/to-divorce-format";//TODO - remove
     private static final String IDAM_USER_DETAILS_URL = "/details";
 
     private static final Map<String, Object> CASE_DATA = ImmutableMap.of(

@@ -40,7 +40,7 @@ public class RetrieveCaseITest extends IdamTestSupport {
 
     private static final String API_URL = "/retrieve-case";
     private static final String GET_CASE_CONTEXT_PATH = "/casemaintenance/version/1/case";
-    private static final String FORMAT_TO_DIVORCE_CONTEXT_PATH = "/caseformatter/version/1/to-divorce-format";
+    private static final String FORMAT_TO_DIVORCE_CONTEXT_PATH = "/caseformatter/version/1/to-divorce-format";//TODO - remove
 
     private static final Map<String, Object> CASE_DATA = Collections.singletonMap(D_8_DIVORCE_UNIT, TEST_COURT);
     private static final CaseDetails CASE_DETAILS =

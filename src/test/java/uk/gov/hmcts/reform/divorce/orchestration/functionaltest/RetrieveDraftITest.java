@@ -40,7 +40,7 @@ public class RetrieveDraftITest extends IdamTestSupport {
     private static final String CMS_CONTEXT_PATH = "/casemaintenance/version/1/retrieveCase";
     private static final String CMS_UPDATE_CASE_PATH =
         "/casemaintenance/version/1/updateCase/1547073120300616/paymentMade";
-    private static final String CFS_CONTEXT_PATH = "/caseformatter/version/1/to-divorce-format";
+    private static final String CFS_CONTEXT_PATH = "/caseformatter/version/1/to-divorce-format";//TODO - remove
 
     private static final String CARD_PAYMENT_PATH = "/card-payments/RC-1547-0733-1813-9545";
     private static final String USER_TOKEN = "Some JWT Token";

@@ -6,9 +6,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import uk.gov.hmcts.reform.divorce.orchestration.client.CaseFormatterClient;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.task.TaskContext;
 import uk.gov.hmcts.reform.divorce.orchestration.tasks.generalorders.GeneralOrdersFilterTask;
+import uk.gov.hmcts.reform.divorce.service.DataMapTransformer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +18,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.divorce.orchestration.TestConstants.AUTH_TOKEN;
 import static uk.gov.hmcts.reform.divorce.orchestration.TestConstants.TEST_PAYLOAD_TO_RETURN;
 import static uk.gov.hmcts.reform.divorce.orchestration.domain.model.OrchestrationConstants.IS_DRAFT_KEY;
 import static uk.gov.hmcts.reform.divorce.orchestration.testutil.TaskContextHelper.contextWithToken;
@@ -27,7 +26,7 @@ import static uk.gov.hmcts.reform.divorce.orchestration.testutil.TaskContextHelp
 public class CaseDataDraftToDivorceFormatterTest {
 
     @Mock
-    private CaseFormatterClient caseFormatterClient;
+    private DataMapTransformer dataMapTransformer;
 
     @Mock
     private GeneralOrdersFilterTask generalOrdersFilterTask;
@@ -48,11 +47,11 @@ public class CaseDataDraftToDivorceFormatterTest {
     public void shouldTransformIfCaseDataIsNotDraft() {
         caseData.put(IS_DRAFT_KEY, false);
         when(generalOrdersFilterTask.execute(taskContext, caseData)).thenReturn(caseData);
-        when(caseFormatterClient.transformToDivorceFormat(AUTH_TOKEN, caseData)).thenReturn(TEST_PAYLOAD_TO_RETURN);
+        when(dataMapTransformer.transformCoreCaseDataToDivorceCaseData(caseData)).thenReturn(TEST_PAYLOAD_TO_RETURN);
 
         Map<String, Object> returnedCaseData = classUnderTest.execute(taskContext, caseData);
 
-        verify(caseFormatterClient).transformToDivorceFormat(AUTH_TOKEN, caseData);
+        verify(dataMapTransformer).transformCoreCaseDataToDivorceCaseData(caseData);
         verify(generalOrdersFilterTask).execute(taskContext, caseData);
         assertThat(returnedCaseData, is(TEST_PAYLOAD_TO_RETURN));
     }
@@ -60,11 +59,11 @@ public class CaseDataDraftToDivorceFormatterTest {
     @Test
     public void shouldTransformIfDraftInfoIsNotSpecified() {
         when(generalOrdersFilterTask.execute(taskContext, caseData)).thenReturn(caseData);
-        when(caseFormatterClient.transformToDivorceFormat(AUTH_TOKEN, caseData)).thenReturn(TEST_PAYLOAD_TO_RETURN);
+        when(dataMapTransformer.transformCoreCaseDataToDivorceCaseData(caseData)).thenReturn(TEST_PAYLOAD_TO_RETURN);
 
         Map<String, Object> returnedCaseData = classUnderTest.execute(taskContext, caseData);
 
-        verify(caseFormatterClient).transformToDivorceFormat(AUTH_TOKEN, caseData);
+        verify(dataMapTransformer).transformCoreCaseDataToDivorceCaseData(caseData);
         verify(generalOrdersFilterTask).execute(taskContext, caseData);
         assertThat(returnedCaseData, is(TEST_PAYLOAD_TO_RETURN));
     }
@@ -75,7 +74,7 @@ public class CaseDataDraftToDivorceFormatterTest {
 
         Map<String, Object> returnedCaseData = classUnderTest.execute(taskContext, caseData);
 
-        verifyNoInteractions(generalOrdersFilterTask, caseFormatterClient);
+        verifyNoInteractions(generalOrdersFilterTask, dataMapTransformer);
         assertThat(returnedCaseData, is(caseData));
     }
 
