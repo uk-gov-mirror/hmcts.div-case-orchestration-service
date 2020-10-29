@@ -34,8 +34,8 @@ public class DataTransformationTestHelper {
     public static Map<String, Object> getExpectedTranslatedDivorceSessionJsonAsMap() throws IOException {
         //        coreCaseData.setCreatedDate(LocalDate.now().toString());//TODO - dwt
         DivorceSession expectedTranslatedDivorceSessionData = getExpectedTranslatedDivorceSessionData();
-        String json = ObjectMapperTestUtil.convertObjectToJsonString(expectedTranslatedDivorceSessionData);
-        return ObjectMapperTestUtil.getObjectMapperInstance().readValue(json, new TypeReference<Map<String, Object>>() {
+//        String json = ObjectMapperTestUtil.convertObjectToJsonString(expectedTranslatedDivorceSessionData);
+        return ObjectMapperTestUtil.getObjectMapperInstance().convertValue(expectedTranslatedDivorceSessionData, new TypeReference<Map<String, Object>>() {
         });
     }//TODO - candidate for the above method
 

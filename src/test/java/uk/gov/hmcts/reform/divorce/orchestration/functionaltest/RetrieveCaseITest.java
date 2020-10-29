@@ -3,6 +3,11 @@ package uk.gov.hmcts.reform.divorce.orchestration.functionaltest;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.matching.EqualToPattern;
+import com.jayway.jsonpath.JsonPath;
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.json.JSONString;
 import org.junit.Before;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -15,6 +20,8 @@ import uk.gov.hmcts.reform.divorce.orchestration.domain.model.CaseDataResponse;
 import uk.gov.hmcts.reform.divorce.orchestration.domain.model.ccd.CaseDetails;
 import uk.gov.hmcts.reform.divorce.orchestration.domain.model.idam.UserDetails;
 import uk.gov.hmcts.reform.divorce.orchestration.testutil.CourtsMatcher;
+import uk.gov.hmcts.reform.divorce.orchestration.testutil.JSONComparisonMatcher;
+import uk.gov.hmcts.reform.divorce.orchestration.testutil.ObjectMapperTestUtil;
 
 import java.io.IOException;
 import java.util.Map;
@@ -23,6 +30,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.isJson;
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
@@ -130,14 +138,15 @@ public class RetrieveCaseITest extends IdamTestSupport {
     public void givenAllGoesWellProceedAsExpected_RetrieveCaseInformation() throws Exception {
         stubGetCaseFromCMS(caseDetails);
 
-        Map<String, Object> expectedTranslatedDivorceSessionDataAsMap = getExpectedTranslatedDivorceSessionJsonAsMap();//TODO - get it passing, then refactor
+//        Map<String, Object> expectedTranslatedDivorceSessionDataAsMap = getExpectedTranslatedDivorceSessionJsonAsMap();//TODO - get it passing, then refactor
+        DivorceSession expectedTranslatedDivorceSessionDataAsMap = getExpectedTranslatedDivorceSessionData();//TODO - get it passing, then refactor
 
-        CaseDataResponse expectedCaseDataResponse = CaseDataResponse.builder()
-            .data(expectedTranslatedDivorceSessionDataAsMap)
-            .caseId(TEST_CASE_ID)
-            .state(TEST_STATE)
-            .court(TEST_COURT)
-            .build();
+//        CaseDataResponse expectedCaseDataResponse = CaseDataResponse.builder()
+//            .data(expectedTranslatedDivorceSessionDataAsMap)
+//            .caseId(TEST_CASE_ID)
+//            .state(TEST_STATE)
+//            .court(TEST_COURT)
+//            .build();
 
         String responseBody = webClient.perform(get(API_URL)
             .header(AUTHORIZATION, AUTH_TOKEN)
@@ -148,8 +157,13 @@ public class RetrieveCaseITest extends IdamTestSupport {
             .getContentAsString();
 
         assertThat(responseBody, isJson());
-        assertThat(responseBody, hasJsonPath("$.data.court", CourtsMatcher.isExpectedCourtsList()));
-        JSONAssert.assertEquals(convertObjectToJsonString(expectedCaseDataResponse), responseBody, false);//TODO - try strict when this works?
+        assertThat(responseBody, hasJsonPath("$.caseId", is(TEST_CASE_ID)));
+        assertThat(responseBody, hasJsonPath("$.state", is(TEST_STATE)));
+        assertThat(responseBody, hasJsonPath("$.courts", is(TEST_COURT)));
+        assertThat(responseBody, hasJsonPath("$.data.court", CourtsMatcher.isExpectedCourtsList()));//TODO - is this still needed?
+        assertThat(responseBody, hasJsonPath("$.data", new JSONComparisonMatcher(convertObjectToJsonString(expectedTranslatedDivorceSessionDataAsMap))));
+
+//        JSONAssert.assertEquals(convertObjectToJsonString(expectedTranslatedDivorceSessionDataAsMap), data, false);//TODO - try strict when this works?
 //            .andExpect(content().json(convertObjectToJsonString(expectedCaseDataResponse)))//TODO - might be better  to write the json matchers
     }
 

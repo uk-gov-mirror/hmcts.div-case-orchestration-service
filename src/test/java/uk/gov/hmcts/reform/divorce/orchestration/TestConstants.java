@@ -77,7 +77,7 @@ public class TestConstants {
     public static final String BEARER_AUTH_TOKEN = "Bearer test.auth.token";
     public static final String CASEWORKER_AUTH_TOKEN = "caseworker.auth.token";
     public static final String AUTH_TOKEN_1 = "test.auth.token1";
-    public static final String TEST_EMAIL = "test.email";
+    public static final String TEST_EMAIL = "test.email@email.com";
     public static final String BEARER_AUTH_TOKEN_1 = "Bearer test.auth.token1";
     public static final String TEST_CODE = "test.code";
     public static final String TEST_JUDGE_NAME = "Judge name";
