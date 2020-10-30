@@ -138,11 +138,11 @@ public class RetrieveCaseITest extends IdamTestSupport {
     public void givenAllGoesWellProceedAsExpected_RetrieveCaseInformation() throws Exception {
         stubGetCaseFromCMS(caseDetails);
 
-//        Map<String, Object> expectedTranslatedDivorceSessionDataAsMap = getExpectedTranslatedDivorceSessionJsonAsMap();//TODO - get it passing, then refactor
-        DivorceSession expectedTranslatedDivorceSessionDataAsMap = getExpectedTranslatedDivorceSessionData();//TODO - get it passing, then refactor
+//        Map<String, Object> expectedTranslatedDivorceSessionData = getExpectedTranslatedDivorceSessionJsonAsMap();//TODO - get it passing, then refactor
+        DivorceSession expectedTranslatedDivorceSessionData = getExpectedTranslatedDivorceSessionData();//TODO - get it passing, then refactor
 
 //        CaseDataResponse expectedCaseDataResponse = CaseDataResponse.builder()
-//            .data(expectedTranslatedDivorceSessionDataAsMap)
+//            .data(expectedTranslatedDivorceSessionData)
 //            .caseId(TEST_CASE_ID)
 //            .state(TEST_STATE)
 //            .court(TEST_COURT)
@@ -161,9 +161,10 @@ public class RetrieveCaseITest extends IdamTestSupport {
         assertThat(responseBody, hasJsonPath("$.state", is(TEST_STATE)));
         assertThat(responseBody, hasJsonPath("$.courts", is(TEST_COURT)));
         assertThat(responseBody, hasJsonPath("$.data.court", CourtsMatcher.isExpectedCourtsList()));//TODO - is this still needed?
-        assertThat(responseBody, hasJsonPath("$.data", is(new JSONComparisonMatcher(convertObjectToJsonString(expectedTranslatedDivorceSessionDataAsMap)))));
+        String actualCaseData = getObjectMapperInstance().readTree(responseBody).get("data").toString();
+//        assertThat(responseBody, hasJsonPath("$.data", is(new JSONComparisonMatcher(convertObjectToJsonString(expectedTranslatedDivorceSessionData)))));
 
-//        JSONAssert.assertEquals(convertObjectToJsonString(expectedTranslatedDivorceSessionDataAsMap), data, false);//TODO - try strict when this works?
+        JSONAssert.assertEquals(convertObjectToJsonString(expectedTranslatedDivorceSessionData), actualCaseData, false);//TODO - try strict when this works?
 //            .andExpect(content().json(convertObjectToJsonString(expectedCaseDataResponse)))//TODO - might be better  to write the json matchers
     }
 
