@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.divorce.orchestration.functionaltest;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.matching.EqualToPattern;
 import com.jayway.jsonpath.JsonPath;
@@ -50,6 +51,7 @@ import static uk.gov.hmcts.reform.divorce.orchestration.testutil.DataTransformat
 import static uk.gov.hmcts.reform.divorce.orchestration.testutil.DataTransformationTestHelper.getExpectedTranslatedDivorceSessionJsonAsMap;
 import static uk.gov.hmcts.reform.divorce.orchestration.testutil.DataTransformationTestHelper.getTestCoreCaseData;
 import static uk.gov.hmcts.reform.divorce.orchestration.testutil.ObjectMapperTestUtil.convertObjectToJsonString;
+import static uk.gov.hmcts.reform.divorce.orchestration.testutil.ObjectMapperTestUtil.getJsonFromResourceFile;
 import static uk.gov.hmcts.reform.divorce.orchestration.testutil.ObjectMapperTestUtil.getObjectMapperInstance;
 
 public class RetrieveCaseITest extends IdamTestSupport {
@@ -139,7 +141,8 @@ public class RetrieveCaseITest extends IdamTestSupport {
         stubGetCaseFromCMS(caseDetails);
 
 //        Map<String, Object> expectedTranslatedDivorceSessionData = getExpectedTranslatedDivorceSessionJsonAsMap();//TODO - get it passing, then refactor
-        DivorceSession expectedTranslatedDivorceSessionData = getExpectedTranslatedDivorceSessionData();//TODO - get it passing, then refactor
+        JsonNode expectedTranslatedDivorceSessionData = getJsonFromResourceFile("/jsonExamples/payloads/transformations/ccdtodivorce/divorce/case-data.json", JsonNode.class);//TODO - get it passing, then refactor
+        //TODO - put this in separate class
 
 //        CaseDataResponse expectedCaseDataResponse = CaseDataResponse.builder()
 //            .data(expectedTranslatedDivorceSessionData)
@@ -164,7 +167,7 @@ public class RetrieveCaseITest extends IdamTestSupport {
         String actualCaseData = getObjectMapperInstance().readTree(responseBody).get("data").toString();
 //        assertThat(responseBody, hasJsonPath("$.data", is(new JSONComparisonMatcher(convertObjectToJsonString(expectedTranslatedDivorceSessionData)))));
 
-        JSONAssert.assertEquals(convertObjectToJsonString(expectedTranslatedDivorceSessionData), actualCaseData, false);//TODO - try strict when this works?
+        JSONAssert.assertEquals(expectedTranslatedDivorceSessionData.toPrettyString(), actualCaseData, false);//TODO - try strict when this works?
 //            .andExpect(content().json(convertObjectToJsonString(expectedCaseDataResponse)))//TODO - might be better  to write the json matchers
     }
 
