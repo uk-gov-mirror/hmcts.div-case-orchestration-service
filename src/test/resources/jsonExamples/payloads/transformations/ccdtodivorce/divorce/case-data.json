@@ -15,9 +15,6 @@
     "marriageDateYear": 2001,
     "marriageDate": "2001-02-02T00:00:00.000Z",
     "marriageCanDivorce": "true",
-    "marriageDateIsFuture": false,
-    "marriageDateMoreThan100": false,
-    "marriageWhereMarried": "england",
     "petitionerContactDetailsConfidential": "share",
     "petitionerFirstName": "John",
     "petitionerLastName": "Smith",
@@ -164,16 +161,7 @@
         ],
         "addressConfirmed": "true",
         "validPostcode": true,
-        "postcodeError": "false",
-        "formattedAddress": {
-            "whereabouts": [
-                "Flat A-B",
-                "86 Landor Road",
-                "London",
-                "SW9 9PE"
-            ],
-            "postcode": "AB22 222"
-        }
+        "postcodeError": "false"
     },
     "respondentLivesAtLastAddress": "No",
     "respondentHomeAddress": {

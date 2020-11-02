@@ -167,7 +167,7 @@ public class RetrieveCaseITest extends IdamTestSupport {
         String actualCaseData = getObjectMapperInstance().readTree(responseBody).get("data").toString();
 //        assertThat(responseBody, hasJsonPath("$.data", is(new JSONComparisonMatcher(convertObjectToJsonString(expectedTranslatedDivorceSessionData)))));
 
-        JSONAssert.assertEquals(expectedTranslatedDivorceSessionData.toPrettyString(), actualCaseData, false);//TODO - try strict when this works?
+        JSONAssert.assertEquals(expectedTranslatedDivorceSessionData.toString(), actualCaseData, false);//TODO - try strict when this works?
 //            .andExpect(content().json(convertObjectToJsonString(expectedCaseDataResponse)))//TODO - might be better  to write the json matchers
     }
 
