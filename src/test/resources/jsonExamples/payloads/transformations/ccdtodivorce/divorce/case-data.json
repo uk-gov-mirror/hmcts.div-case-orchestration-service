@@ -1,267 +1,250 @@
 {
-    "expires": 0,
-    "caseReference": "caseReference",
-    "screenHasMarriageBroken": "Yes",
-    "screenHasRespondentAddress": "Yes",
-    "screenHasMarriageCert": "Yes",
-    "screenHasPrinter": "Yes",
-    "helpWithFeesNeedHelp": "Yes",
-    "helpWithFeesAppliedForFees": "Yes",
-    "helpWithFeesReferenceNumber": "HWF-123-456",
-    "divorceWho": "husband",
-    "marriageIsSameSexCouple": "No",
-    "marriageDateDay": 2,
-    "marriageDateMonth": 2,
-    "marriageDateYear": 2001,
-    "marriageDate": "2001-02-02T00:00:00.000Z",
-    "marriageCanDivorce": "true",
-    "petitionerContactDetailsConfidential": "share",
-    "petitionerFirstName": "John",
-    "petitionerLastName": "Smith",
-    "respondentFirstName": "Jane",
-    "respondentLastName": "Jamed",
-    "marriagePetitionerName": "John Doe",
-    "marriageRespondentName": "Jenny Benny",
-    "petitionerNameDifferentToMarriageCertificate": "Yes",
-    "petitionerNameChangedHow": [
-        "marriageCertificate"
+  "caseReference": "LV17D80100",
+  "respondentCorrespondenceAddress":{
+    "postcodeManual":null,
+    "addressConfirmed":"true",
+    "validPostcode":true,
+    "address":[
+      "82 Landor Road",
+      "London",
+      "SW9 9PE"
     ],
-    "petitionerEmail": "simulate-delivered@notifications.service.gov.uk",
-    "petitionerPhoneNumber": "01234567890",
-    "petitionerHomeAddress": {
-        "addressType": "postcode",
-        "postcode": "SW9 9PE",
-        "address": [
-            "82 Landor Road",
-            "London",
-            "SW9 9PE"
-        ],
-        "addressConfirmed": "true",
-        "validPostcode": true,
-        "postcodeError": "false",
-        "formattedAddress": {
-            "whereabouts": [
-                "82 Landor Road",
-                "London"
-            ],
-            "postcode": "SW9 9PE"
-        }
-    },
-    "petitionerCorrespondenceUseHomeAddress": "No",
-    "livingArrangementsLiveTogether": "No",
-    "respondentCorrespondenceUseHomeAddress": "Solicitor",
-    "reasonForDivorce": "unreasonable-behaviour",
-    "reasonForDivorceHasMarriageDate": true,
-    "reasonForDivorceShowAdultery": true,
-    "reasonForDivorceShowUnreasonableBehaviour": true,
-    "reasonForDivorceShowTwoYearsSeparation": true,
-    "reasonForDivorceShowFiveYearsSeparation": true,
-    "reasonForDivorceShowDesertion": true,
-    "reasonForDivorceLimitReasons": false,
-    "reasonForDivorceEnableAdultery": true,
-    "reasonForDivorceBehaviourDetails": [
-        "My wife is having an affair this week."
+    "town":null,
+    "addressType":"postcode",
+    "postcode":"SW9 9PE",
+    "addressAbroad":null,
+    "street1":null,
+    "street2":null,
+    "postcodeError":"false",
+    "url":null
+  },
+  "petitionerLastName":"Smith",
+  "livingArrangementsLiveTogether":"No",
+  "petitionerFirstName":"John",
+  "courts":"serviceCentre",
+  "claimsCosts":"Yes",
+  "reasonForDivorceShowDesertion":"true",
+  "jurisdictionConfidentLegal":"Yes",
+  "respondentLastName":"Jamed",
+  "reasonForDivorceShowTwoYearsSeparation":"true",
+  "petitionerCorrespondenceAddress":{
+    "postcodeManual":null,
+    "addressConfirmed":"true",
+    "validPostcode":true,
+    "address":[
+      "84 Landor Road",
+      "London",
+      "SW9 9PE"
     ],
-    "legalProceedings": "Yes",
-    "legalProceedingsRelated": [
-        "children"
+    "town":null,
+    "addressType":"postcode",
+    "postcode":"AB24 232",
+    "addressAbroad":null,
+    "street1":null,
+    "street2":null,
+    "postcodeError":"false",
+    "url":null
+  },
+  "helpWithFeesNeedHelp":"Yes",
+  "marriageDate":"2001-02-02T00:00:00.000+0000",
+  "petitionerNameChangedHow":[
+    "marriageCertificate"
+  ],
+  "screenHasRespondentAddress":"Yes",
+  "connections":{
+    "A":"The Petitioner and the Respondent are habitually resident in England and Wales",
+    "B":null,
+    "C":"The Respondent is habitually resident in England and Wales",
+    "D":null,
+    "E":null,
+    "F":null,
+    "G":null
+  },
+  "petitionerCorrespondenceUseHomeAddress":"No",
+  "reasonForDivorceShowUnreasonableBehaviour":"true",
+  "reasonForDivorceEnableAdultery":"true",
+  "legalProceedingsDetails":"The legal proceeding details",
+  "court":{
+    "northWest":{
+      "phoneNumber":"0300 303 0642",
+      "street":"35 Vernon Street",
+      "divorceCentre":"North West Regional Divorce Centre",
+      "siteId":"AA04",
+      "divorceCentreAddressName":"Liverpool Civil & Family Court",
+      "postCode":"L2 2BX",
+      "openingHours": "Telephone Enquiries from: Monday - Friday 8am to 8pm, Saturday 8am to 2pm",
+      "courtCity":"Liverpool",
+      "email":"family@liverpool.countycourt.gsi.gov.uk"
+    },
+    "southWest":{
+      "poBox":"PO Box 1792",
+      "phoneNumber":"0300 303 0642",
+      "divorceCentre":"South West Regional Divorce Centre",
+      "siteId":"AA03",
+      "postCode":"SO15 9GG",
+      "openingHours": "Telephone Enquiries from: Monday - Friday 8am to 8pm, Saturday 8am to 2pm",
+      "courtCity":"Southampton",
+      "email":"sw-region-divorce@hmcts.gsi.gov.uk"
+    },
+    "westMidlands":{
+      "poBox":"PO Box 3650",
+      "phoneNumber":"0300 303 0642",
+      "divorceCentre":"West Midlands Regional Divorce Centre",
+      "siteId":"AA02",
+      "postCode":"ST4 9NH",
+      "openingHours": "Telephone Enquiries from: Monday - Friday 8am to 8pm, Saturday 8am to 2pm",
+      "courtCity":"Stoke-on-Trent",
+      "email":"westmidlandsdivorce@hmcts.gsi.gov.uk"
+    },
+    "eastMidlands":{
+      "poBox":"PO Box 10447",
+      "phoneNumber":"0300 303 0642",
+      "divorceCentre":"East Midlands Regional Divorce Centre",
+      "siteId":"AA01",
+      "postCode":"NG2 9QN",
+      "openingHours": "Telephone Enquiries from: Monday - Friday 8am to 8pm, Saturday 8am to 2pm",
+      "courtCity":"Nottingham",
+      "email":"eastmidlandsdivorce@hmcts.gsi.gov.uk"
+    },
+    "serviceCentre":{
+      "poBox":"PO Box 12706",
+      "phoneNumber":"0300 303 0642",
+      "serviceCentreName":"Courts and Tribunals Service Centre",
+      "divorceCentre":"HMCTS Digital Divorce",
+      "siteId":"AA07",
+      "postCode":"CM20 9QT",
+      "openingHours": "Telephone Enquiries from: Monday - Friday 8am to 8pm, Saturday 8am to 2pm",
+      "courtCity":"Harlow",
+      "email":"divorcecase@justice.gov.uk"
+    }
+  },
+  "reasonForDivorceShowFiveYearsSeparation":"true",
+  "claimsCostsFrom":[
+    "respondent"
+  ],
+  "screenHasMarriageBroken":"Yes",
+  "petitionerEmail":"simulate-delivered@notifications.service.gov.uk",
+  "reasonForDivorce":"unreasonable-behaviour",
+  "jurisdictionPetitionerResidence":"Yes",
+  "legalProceedings":"Yes",
+  "marriageIsSameSexCouple":"No",
+  "jurisdictionRespondentResidence":"Yes",
+  "expires":0,
+  "helpWithFeesReferenceNumber":"HWF-123-456",
+  "divorceWho":"husband",
+  "marriagePetitionerName":"John Doe",
+  "screenHasPrinter":"Yes",
+  "petitionerPhoneNumber":"01234567890",
+  "helpWithFeesAppliedForFees":"Yes",
+  "marriageDateDay":2,
+  "respondentCorrespondenceUseHomeAddress":"Solicitor",
+  "reasonForDivorceShowAdultery":"true",
+  "marriageDateYear":2001,
+  "jurisdictionConnection":[
+    "A",
+    "C"
+  ],
+  "financialOrder":"Yes",
+  "petitionerContactDetailsConfidential":"share",
+  "confirmPrayer":"Yes",
+  "claimsCostsAppliedForFees":"true",
+  "legalProceedingsRelated":[
+    "children"
+  ],
+  "reasonForDivorceAdulteryIsNamed":"No",
+  "reasonForDivorceClaiming5YearSeparation":"false",
+  "petitionerNameDifferentToMarriageCertificate":"Yes",
+  "livingArrangementsLastLivedTogether":"No",
+  "respondentHomeAddress":{
+    "postcodeManual":null,
+    "addressConfirmed":"true",
+    "validPostcode":true,
+    "address":[
+      "88 Landor Road",
+      "London",
+      "SW9 9PE"
     ],
-    "legalProceedingsDetails": "The legal proceeding details",
-    "financialOrder": "Yes",
-    "financialOrderFor": [
-        "petitioner",
-        "children"
+    "town":null,
+    "addressType":"postcode",
+    "postcode":"SS SSS",
+    "addressAbroad":null,
+    "street1":null,
+    "street2":null,
+    "postcodeError":"false",
+    "url":null
+  },
+  "marriageRespondentName":"Jenny Benny",
+  "petitionerHomeAddress":{
+    "postcodeManual":null,
+    "addressConfirmed":"true",
+    "validPostcode":true,
+    "address":[
+      "82 Landor Road",
+      "London",
+      "SW9 9PE"
     ],
-    "claimsCosts": "Yes",
-    "reasonForDivorceAdulteryIsNamed": "No",
-    "claimsCostsFrom": [
-        "respondent"
+    "town":null,
+    "addressType":"postcode",
+    "postcode":"SW9 9PE",
+    "addressAbroad":null,
+    "street1":null,
+    "street2":null,
+    "postcodeError":"false",
+    "url":null
+  },
+  "reasonForDivorceBehaviourDetails":[
+    "My wife is having an affair this week."
+  ],
+  "screenHasMarriageCert":"Yes",
+  "livingArrangementsLastLivedTogetherAddress":{
+    "postcodeManual":null,
+    "addressConfirmed":"true",
+    "validPostcode":false,
+    "address":[
+      "Flat A-B",
+      "86 Landor Road",
+      "London",
+      "SW9 9PE"
     ],
-    "claimsCostsAppliedForFees": "true",
-    "reasonForDivorceClaiming5YearSeparation": false,
-    "reasonForDivorceClaimingAdultery": false,
-    "marriageCertificateFiles": [
-        {
-            "id": "7f63ca9b-c361-49ab-aa8c-8fbdb6bc2936",
-            "createdBy": 0,
-            "createdOn": "2017-12-11T00:00:00.000+0000",
-            "lastModifiedBy": 0,
-            "fileName": "govuklogo.png",
-            "fileUrl": "http://localhost:5006/documents/7f63ca9b-c361-49ab-aa8c-8fbdb6bc2936"
-        },
-        {
-            "id": "560f4bd1-fcf2-4dc5-80d1-d7e00d861683",
-            "createdBy": 0,
-            "createdOn": "2017-12-11T00:00:00.000+0000",
-            "lastModifiedBy": 0,
-            "fileName": "d8-eng.pdf",
-            "fileUrl": "http://localhost:5006/documents/560f4bd1-fcf2-4dc5-80d1-d7e00d861683"
-        }
+    "town":null,
+    "addressType":"manual",
+    "postcode":null,
+    "addressAbroad":"Flat A-B\n86 Landor Road\nLondon\nSW9 9PE",
+    "street1":null,
+    "street2":null,
+    "postcodeError":null,
+    "url":null
+  },
+  "reasonForDivorceClaimingAdultery":"false",
+  "respondentFirstName":"Jane",
+  "reasonForDivorceLimitReasons":"false",
+  "reasonForDivorceHasMarriageDate":"true",
+  "marriageDateMonth":2,
+  "createdDate":"2018-06-07T00:00:00.000+0000",
+  "marriageCanDivorce":"true",
+  "respondentLivesAtLastAddress":"No",
+  "financialOrderFor":[
+    "petitioner",
+    "children"
+  ],
+  "respondentSolicitorAddress":{
+    "postcodeManual":null,
+    "addressConfirmed":"true",
+    "validPostcode":false,
+    "address":[
+      "90 Landor Road",
+      "London",
+      "SW9 9PE"
     ],
-    "courts": "serviceCentre",
-    "jurisdictionConnection": [
-        "A",
-        "C"
-    ],
-    "connections": {
-        "A": "The Petitioner and the Respondent are habitually resident in England and Wales",
-        "C": "The Respondent is habitually resident in England and Wales"
-    },
-    "jurisdictionPetitionerResidence": "Yes",
-    "jurisdictionRespondentResidence": "Yes",
-    "jurisdictionConfidentLegal": "Yes",
-    "respondentCorrespondenceAddress": {
-        "addressType": "postcode",
-        "postcode": "SW9 9PE",
-        "address": [
-            "82 Landor Road",
-            "London",
-            "SW9 9PE"
-        ],
-        "addressConfirmed": "true",
-        "validPostcode": true,
-        "postcodeError": "false",
-        "formattedAddress": {
-            "whereabouts": [
-                "82 Landor Road",
-                "London"
-            ],
-            "postcode": "SW9 9PE"
-        }
-    },
-    "petitionerCorrespondenceAddress": {
-        "addressType": "postcode",
-        "postcode": "AB24 232",
-        "address": [
-            "84 Landor Road",
-            "London",
-            "SW9 9PE"
-        ],
-        "addressConfirmed": "true",
-        "validPostcode": true,
-        "postcodeError": "false",
-        "formattedAddress": {
-            "whereabouts": [
-                "84 Landor Road",
-                "London",
-                "SW9 9PE"
-            ],
-            "postcode": "AB24 232"
-        }
-    },
-    "livingArrangementsLastLivedTogether": "No",
-    "livingArrangementsLastLivedTogetherAddress": {
-        "addressType": "postcode",
-        "postcode": "AB22 222",
-        "address": [
-            "Flat A-B",
-            "86 Landor Road",
-            "London",
-            "SW9 9PE"
-        ],
-        "addressConfirmed": "true",
-        "validPostcode": true,
-        "postcodeError": "false"
-    },
-    "respondentLivesAtLastAddress": "No",
-    "respondentHomeAddress": {
-        "addressType": "postcode",
-        "postcode": "SS SSS",
-        "address": [
-            "88 Landor Road",
-            "London",
-            "SW9 9PE"
-        ],
-        "addressConfirmed": "true",
-        "validPostcode": true,
-        "postcodeError": "false",
-        "formattedAddress": {
-            "whereabouts": [
-                "88 Landor Road",
-                "London",
-                "SW9 9PE"
-            ],
-            "postcode": "SS SSS"
-        }
-    },
-    "respondentSolicitorName": "Justin",
-    "respondentSolicitorCompany": "Case",
-    "respondentSolicitorEmail": "justin@example.com",
-    "respondentSolicitorPhoneNumber": "01234567890",
-    "respondentSolicitorAddress": {
-        "addressType": "postcode",
-        "postcode": "SW9 9PE",
-        "address": [
-            "90 Landor Road",
-            "London",
-            "SW9 9PE"
-        ],
-        "addressConfirmed": "true",
-        "validPostcode": true,
-        "postcodeError": "false",
-        "formattedAddress": {
-            "whereabouts": [
-                "90 Landor Road",
-                "London",
-                "SW9 9PE"
-            ],
-            "postcode": "A AAA"
-        }
-    },
-    "reasonForDivorceAdultery3rdAddress": {
-        "addressType": "postcode",
-        "postcode": "A AAA",
-        "address": [
-            "90 Landor Road",
-            "London",
-            "SW9 9PE"
-        ],
-        "addressConfirmed": "true",
-        "validPostcode": true,
-        "postcodeError": "false",
-        "formattedAddress": {
-            "whereabouts": [
-                "90 Landor Road",
-                "London",
-                "SW9 9PE"
-            ],
-            "postcode": "SW9 9PE"
-        }
-    },
-    "petitionerConsent": "Yes",
-    "dateRespondentEligibleForDA": "2019-01-11",
-    "dateCaseNoLongerEligibleForDA": "2020-01-12",
-    "respContactMethodIsDigital": false,
-    "d8": [
-        {
-            "id": "560f4bd1-fcf2-4dc5-80d1-d7e00d861683",
-            "createdOn": "2017-12-11T00:00:00.000+0000",
-            "fileName": "d8-eng.pdf",
-            "fileUrl": "http://localhost:5006/documents/560f4bd1-fcf2-4dc5-80d1-d7e00d861683"
-        },
-        {
-            "id": "04e78b6b-3a6f-4db7-b0c5-f8eeb814a83d",
-            "createdOn": "2017-12-11T00:00:00.000+0000",
-            "fileName": "deemedServiceRefused2020-09-28.pdf",
-            "fileUrl": "http://localhost:5006/documents/04e78b6b-3a6f-4db7-b0c5-f8eeb814a83d"
-        },
-        {
-            "id": "c4ca7cbc-adb2-4908-b522-ad69961ae9ff",
-            "createdOn": "2017-12-11T00:00:00.000+0000",
-            "fileName": "deemedServiceRefused2020-08-01.pdf",
-            "fileUrl": "http://localhost:5006/documents/c4ca7cbc-adb2-4908-b522-ad69961ae9ff"
-        },
-        {
-            "id": "9320ad41-4980-47b7-885d-76daae69ff9b",
-            "createdOn": "2020-12-28T00:00:00.000+0000",
-            "fileName": "generalOrder2020-12-28.pdf",
-            "fileUrl": "http://localhost:5006/documents/9320ad41-4980-47b7-885d-76daae69ff9b"
-        },
-        {
-            "id": "649111b0-1aad-446d-b979-27f5862af583",
-            "createdOn": "2020-12-29T00:00:00.000+0000",
-            "fileName": "generalOrder2020-12-29.pdf",
-            "fileUrl": "http://localhost:5006/documents/649111b0-1aad-446d-b979-27f5862af583"
-        }
-    ]
+    "town":null,
+    "addressType":"manual",
+    "postcode":null,
+    "addressAbroad":"90 Landor Road\nLondon\nSW9 9PE",
+    "street1":null,
+    "street2":null,
+    "postcodeError":null,
+    "url":null
+  },
+  "receivedAosFromResp": "Yes",
+  "receivedAosFromRespDate": "2018-10-22T00:00:00.000+0000"
 }
