@@ -46,7 +46,7 @@
     "url":null
   },
   "helpWithFeesNeedHelp":"Yes",
-  "marriageDate":"2001-02-02T00:00:00.000+0000",
+  "marriageDate":"2001-02-02",
   "petitionerNameChangedHow":[
     "marriageCertificate"
   ],
@@ -220,7 +220,7 @@
   "reasonForDivorceLimitReasons":"false",
   "reasonForDivorceHasMarriageDate":"true",
   "marriageDateMonth":2,
-  "createdDate":"2018-06-07T00:00:00.000+0000",
+  "createdDate":"2018-06-07",
   "marriageCanDivorce":"true",
   "respondentLivesAtLastAddress":"No",
   "financialOrderFor":[
@@ -246,5 +246,5 @@
     "url":null
   },
   "receivedAosFromResp": "Yes",
-  "receivedAosFromRespDate": "2018-10-22T00:00:00.000+0000"
+  "receivedAosFromRespDate": "2018-10-22"
 }
