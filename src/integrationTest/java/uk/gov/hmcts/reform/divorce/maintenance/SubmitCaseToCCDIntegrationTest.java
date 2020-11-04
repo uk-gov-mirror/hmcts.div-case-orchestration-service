@@ -43,7 +43,7 @@ public class SubmitCaseToCCDIntegrationTest extends RetrieveCaseSupport {
         String allocatedCourt = caseCreationResponseBody.path(ALLOCATED_COURT_ID_KEY);
         assertThat(allocatedCourt, is(notNullValue()));
 
-        ResponseBody retrieveCaseResponseBody = retrieveCase(userDetails.getAuthToken()).body();
+        ResponseBody retrieveCaseResponseBody = retrieveCase(userDetails.getAuthToken()).body();//"d8DocumentsUploaded"
         assertThat(retrieveCaseResponseBody.path(RETRIEVED_DATA_COURT_ID_KEY), is(allocatedCourt));
     }
 
