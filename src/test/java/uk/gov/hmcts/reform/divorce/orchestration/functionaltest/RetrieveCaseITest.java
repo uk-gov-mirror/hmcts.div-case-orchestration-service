@@ -4,11 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.matching.EqualToPattern;
-import com.jayway.jsonpath.JsonPath;
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.json.JSONString;
 import org.junit.Before;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -17,12 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
 import uk.gov.hmcts.reform.divorce.model.ccd.CoreCaseData;
 import uk.gov.hmcts.reform.divorce.model.usersession.DivorceSession;
-import uk.gov.hmcts.reform.divorce.orchestration.domain.model.CaseDataResponse;
 import uk.gov.hmcts.reform.divorce.orchestration.domain.model.ccd.CaseDetails;
 import uk.gov.hmcts.reform.divorce.orchestration.domain.model.idam.UserDetails;
 import uk.gov.hmcts.reform.divorce.orchestration.testutil.CourtsMatcher;
-import uk.gov.hmcts.reform.divorce.orchestration.testutil.JSONComparisonMatcher;
-import uk.gov.hmcts.reform.divorce.orchestration.testutil.ObjectMapperTestUtil;
 
 import java.io.IOException;
 import java.util.Map;
@@ -48,7 +40,6 @@ import static uk.gov.hmcts.reform.divorce.orchestration.TestConstants.TEST_EMAIL
 import static uk.gov.hmcts.reform.divorce.orchestration.TestConstants.TEST_ERROR;
 import static uk.gov.hmcts.reform.divorce.orchestration.TestConstants.TEST_STATE;
 import static uk.gov.hmcts.reform.divorce.orchestration.testutil.DataTransformationTestHelper.getExpectedTranslatedDivorceSessionData;
-import static uk.gov.hmcts.reform.divorce.orchestration.testutil.DataTransformationTestHelper.getExpectedTranslatedDivorceSessionJsonAsMap;
 import static uk.gov.hmcts.reform.divorce.orchestration.testutil.DataTransformationTestHelper.getTestCoreCaseData;
 import static uk.gov.hmcts.reform.divorce.orchestration.testutil.ObjectMapperTestUtil.convertObjectToJsonString;
 import static uk.gov.hmcts.reform.divorce.orchestration.testutil.ObjectMapperTestUtil.getJsonFromResourceFile;
@@ -70,7 +61,7 @@ public class RetrieveCaseITest extends IdamTestSupport {
     @Before
     public void setUp() throws IOException {
         stubUserDetailsEndpoint(OK, AUTH_TOKEN, convertObjectToJsonString(UserDetails.builder().email(TEST_EMAIL).build()));
-        testCcdData = getTestCoreCaseData();
+        testCcdData = getTestCoreCaseData();//TODO - I might be losing some data here
         expectedTranslatedDivorceSessionData = getExpectedTranslatedDivorceSessionData();//TODO - do I need this method?
 
         Map<String, Object> testCcdDataMap = getObjectMapperInstance().readValue(convertObjectToJsonString(testCcdData), new TypeReference<Map<String, Object>>() {
@@ -138,7 +129,7 @@ public class RetrieveCaseITest extends IdamTestSupport {
 
     @Test
     public void givenAllGoesWellProceedAsExpected_RetrieveCaseInformation() throws Exception {
-        stubGetCaseFromCMS(caseDetails);
+        stubGetCaseFromCMS(caseDetails);//TODO - should I go back to the previous test?
 
 //        Map<String, Object> expectedTranslatedDivorceSessionData = getExpectedTranslatedDivorceSessionJsonAsMap();//TODO - get it passing, then refactor
         JsonNode expectedTranslatedDivorceSessionData = getJsonFromResourceFile("/jsonExamples/payloads/transformations/ccdtodivorce/divorce/case-data.json", JsonNode.class);//TODO - get it passing, then refactor
