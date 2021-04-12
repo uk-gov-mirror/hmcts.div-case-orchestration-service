@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.divorce.orchestration.testutil;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -38,6 +39,10 @@ public class ObjectMapperTestUtil {
 
     public static <T> T convertObject(Object objectToConvert, Class<T> clazz) {
         return objectMapper.convertValue(objectToConvert, clazz);
+    }
+
+    public static <T> T convertJsonToObject(String json, Class<T> clazz) throws JsonProcessingException {
+        return objectMapper.readValue(json, clazz);
     }
 
     public static ObjectMapper getObjectMapperInstance() {
