@@ -24,6 +24,7 @@ import static uk.gov.hmcts.reform.divorce.orchestration.domain.model.CcdFields.R
 import static uk.gov.hmcts.reform.divorce.orchestration.domain.model.OrchestrationConstants.AMENDED_CASE_ID_CCD_KEY;
 
 public class SolicitorAmendPetitionForRefusalTest extends CcdSubmissionSupport {
+
     private static final String PAYLOAD_CONTEXT_PATH = "fixtures/solicitor/";
 
     @Value("${case.orchestration.solicitor-amend-petition-refusal.context-path}")
