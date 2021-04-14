@@ -13,6 +13,7 @@ import uk.gov.hmcts.reform.divorce.orchestration.domain.model.ccd.CcdCallbackReq
 import uk.gov.hmcts.reform.divorce.orchestration.domain.model.ccd.CcdCallbackResponse;
 import uk.gov.hmcts.reform.divorce.support.CcdSubmissionSupport;
 
+import java.util.Map;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -36,13 +37,16 @@ public class SolicitorAmendPetitionForRefusalTest extends CcdSubmissionSupport {
     public void givenValidCase_whenSolicitorAmendPetitionForRefusalRejection_newDraftPetitionIsReturned() throws Exception {
         final UserDetails solicitorUser = createSolicitorUser();
         CaseDetails caseDetails = submitSolicitorCase(ISSUED_SOLICITOR_PETITION_JSON, solicitorUser);
+
         String originalCaseId = caseDetails.getId().toString();
         CcdCallbackResponse ccdCallbackResponse = amendCase(solicitorUser.getAuthToken(), caseDetails);//TODO - I should check that it returns with no errors
-        CaseDetails originalCaseDetails = retrieveCaseForCaseworker(solicitorUser, originalCaseId);//TODO - get caseworker details?
 
+        CaseDetails originalCaseDetails = retrieveCaseForCaseworker(solicitorUser, originalCaseId);//TODO - get caseworker details?
         String amendedCaseId = Optional.ofNullable(originalCaseDetails)
             .map(CaseDetails::getData)
             .map(m -> m.get(AMENDED_CASE_ID_CCD_KEY))
+            .map(Map.class::cast)
+            .map(m -> m.get("CaseReference"))//TODO - const
             .map(String.class::cast)
             .orElseThrow();
         CaseDetails amendedCaseDetails = retrieveCase(solicitorUser, amendedCaseId);
