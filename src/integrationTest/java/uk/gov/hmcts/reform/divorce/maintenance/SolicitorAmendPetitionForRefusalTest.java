@@ -23,6 +23,7 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static uk.gov.hmcts.reform.divorce.orchestration.domain.model.CcdFields.PETITIONER_SOLICITOR_ORGANISATION_POLICY;
 import static uk.gov.hmcts.reform.divorce.orchestration.domain.model.CcdFields.RESPONDENT_SOLICITOR_ORGANISATION_POLICY;
 import static uk.gov.hmcts.reform.divorce.orchestration.domain.model.OrchestrationConstants.AMENDED_CASE_ID_CCD_KEY;
+import static uk.gov.hmcts.reform.divorce.orchestration.domain.model.OrchestrationConstants.CASE_REFERENCE_CCD_KEY;
 import static uk.gov.hmcts.reform.divorce.orchestration.testutil.ObjectMapperTestUtil.convertJsonToObject;
 import static uk.gov.hmcts.reform.divorce.orchestration.testutil.ObjectMapperTestUtil.convertObjectToJsonString;
 
@@ -46,12 +47,13 @@ public class SolicitorAmendPetitionForRefusalTest extends CcdSubmissionSupport {
             .map(CaseDetails::getData)
             .map(m -> m.get(AMENDED_CASE_ID_CCD_KEY))
             .map(Map.class::cast)
-            .map(m -> m.get("CaseReference"))//TODO - const
+            .map(m -> m.get(CASE_REFERENCE_CCD_KEY))
             .map(String.class::cast)
             .orElseThrow();
-        CaseDetails amendedCaseDetails = retrieveCase(solicitorUser, amendedCaseId);
-        assertThat(amendedCaseDetails.getData().get(PETITIONER_SOLICITOR_ORGANISATION_POLICY), is(notNullValue()));
-        assertThat(amendedCaseDetails.getData().get(RESPONDENT_SOLICITOR_ORGANISATION_POLICY), is(notNullValue()));
+        CaseDetails amendedCaseDetails = retrieveCaseForCaseworker(solicitorUser, amendedCaseId);
+        Map<String, Object> amendedCaseDetailsData = amendedCaseDetails.getData();
+        assertThat(amendedCaseDetailsData.get(PETITIONER_SOLICITOR_ORGANISATION_POLICY), is(notNullValue()));
+        assertThat(amendedCaseDetailsData.get(RESPONDENT_SOLICITOR_ORGANISATION_POLICY), is(notNullValue()));
     }
 
     private CcdCallbackResponse amendCase(String authToken, CaseDetails caseDetails) throws Exception {

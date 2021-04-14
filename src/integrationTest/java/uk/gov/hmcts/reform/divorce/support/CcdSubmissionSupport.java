@@ -174,7 +174,7 @@ public abstract class CcdSubmissionSupport extends IntegrationTest {
         return ccdClientSupport.retrieveCase(user, caseId);
     }
 
-    public CaseDetails retrieveCaseForCaseworker(final UserDetails user, String caseId) {
+    public CaseDetails retrieveCaseForCaseworker(final UserDetails user, String caseId) {//TODO - that's not right, I'm using a solicitor
         return ccdClientSupport.retrieveCaseForCaseworker(user, caseId);
     }
 
