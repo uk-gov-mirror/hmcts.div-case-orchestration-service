@@ -35,14 +35,13 @@ public class SolicitorAmendPetitionForRefusalTest extends CcdSubmissionSupport {
     @Test
     public void givenValidCase_whenSolicitorAmendPetitionForRefusalRejection_newDraftPetitionIsReturned() throws Exception {
         final UserDetails solicitorUser = createSolicitorUser();
-
         CaseDetails caseDetails = submitSolicitorCase(ISSUED_SOLICITOR_PETITION_JSON, solicitorUser);
+        String originalCaseId = caseDetails.getId().toString();
+        CcdCallbackResponse ccdCallbackResponse = amendCase(solicitorUser.getAuthToken(), caseDetails);//TODO - I should check that it returns with no errors
+        CaseDetails originalCaseDetails = retrieveCaseForCaseworker(solicitorUser, originalCaseId);//TODO - get caseworker details?
 
-        CcdCallbackResponse ccdCallbackResponse = postWithData(solicitorUser.getAuthToken(), caseDetails);//TODO - I should check that it returns with no errors
-//        retrieveCase(solicitorUser, originalCaseId);ccdCallbackResponse.getData();
-
-        String amendedCaseId = Optional.ofNullable(ccdCallbackResponse)
-            .map(CcdCallbackResponse::getData)
+        String amendedCaseId = Optional.ofNullable(originalCaseDetails)
+            .map(CaseDetails::getData)
             .map(m -> m.get(AMENDED_CASE_ID_CCD_KEY))
             .map(String.class::cast)
             .orElseThrow();
@@ -51,14 +50,16 @@ public class SolicitorAmendPetitionForRefusalTest extends CcdSubmissionSupport {
         assertThat(amendedCaseDetails.getData().get(RESPONDENT_SOLICITOR_ORGANISATION_POLICY), is(notNullValue()));
     }
 
-    private CcdCallbackResponse postWithData(String authToken, CaseDetails caseDetails) throws Exception {
+    private CcdCallbackResponse amendCase(String authToken, CaseDetails caseDetails) throws Exception {
+        String caseId = String.valueOf(caseDetails.getId());
         CcdCallbackRequest ccdCallbackRequest = CcdCallbackRequest.builder()
             .caseDetails(
                 uk.gov.hmcts.reform.divorce.orchestration.domain.model.ccd.CaseDetails.builder()
-                    .caseId(String.valueOf(caseDetails.getId()))
+                    .caseId(caseId)
                     .caseData(caseDetails.getData())
                     .build()
             ).build();
+        System.out.println("Case id: " + caseId);//TODO - delete this
 
         //TODO - use original RestAssured method
 //        String json = ResourceLoader.loadJson("fixtures/solicitor/solicitor-request-data-dn-rejection.json");

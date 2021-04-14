@@ -181,7 +181,7 @@ public class CcdClientSupport {
             caseDataContent);
     }
 
-    public CaseDetails retrieveCase(UserDetails userDetails, String caseId) {
+    public CaseDetails retrieveCase(UserDetails userDetails, String caseId) {//TODO - for citizen
         return coreCaseDataApi.readForCitizen(
             userDetails.getAuthToken(),
             authTokenGenerator.generate(),
