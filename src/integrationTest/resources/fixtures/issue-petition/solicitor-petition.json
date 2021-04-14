@@ -1,25 +1,75 @@
 {
-  "PetitionerOrganisationPolicy": {
-    "Organisation": {
-      "OrganisationID": "M2ZT9Q2",
-      "OrganisationName": "DivPetitionerSolicitorFirm"
-    },
-    "OrgPolicyReference": "DivPetitionerSolicitorFirm",
-    "OrgPolicyCaseAssignedRole": "[PETSOLICITOR]"
-  },
-  "D8DerivedPetitionerHomeAddress": "123 some road\nSW2 2SW",
-  "D8DerivedRespondentCorrespondenceAddr": "123 Resp Road\nSW3 3SW",
+  "PetitionerSolicitorEmail": "solicitor-personal-service@mailinator.com",
   "D8DerivedRespondentHomeAddress": null,
+  "D8DerivedPetitionerHomeAddress": "123 some road\nSW2 2SW",
+  "dueDate": "2021-05-13",
   "D8DivorceCostsClaim": "No",
-  "D8DivorceUnit": "eastMidlands",
-  "D8DivorceWho": "wife",
-  "D8DocumentsGenerated": [
-  ],
-  "D8DocumentsUploaded": [],
-  "D8FinancialOrder": "No",
-  "D8caseReference": "EZ80D81234",
-  "D8InferredPetitionerGender": "male",
+  "SolServiceMethod": "courtService",
   "D8InferredRespondentGender": "female",
+  "D8RespondentCorrespondenceSendToSol": "No",
+  "ReceivedAosFromCoRespDate": null,
+  "solSignStatementofTruth": "Yes",
+  "SolStatementOfReconciliationName": "Peter Pepper",
+  "SolStatementOfReconciliationFirm": "Lineker's LLP",
+  "D8RespondentLastName": "Resp last",
+  "D8PetitionerNameDifferentToMarriageCert": "No",
+  "D8JurisdictionConnection": [
+    "E",
+    "G",
+    "F",
+    "D",
+    "C",
+    "B",
+    "A"
+  ],
+  "SolStatementOfReconciliationCertify": "Yes",
+  "D8SelectedDivorceCentreSiteId": "AA07",
+  "D8PetitionerLastName": "Pet last name",
+  "ReceivedAOSfromRespDate": null,
+  "D8SolicitorReference": "11223344",
+  "D8PetitionerPhoneNumber": null,
+  "D8StatementOfTruth": "Yes",
+  "D8DocumentsGenerated": [
+    {
+      "id": "5cd0fd0e-037b-460d-bfed-fa78fec1eb26",
+      "value": {
+        "DocumentLink": {
+          "document_url": "http://dm-store-aat.service.core-compute-aat.internal/documents/3f03606d-3e59-4a65-96bd-1bf2ad6ec40f",
+          "document_filename": "d8petition1618324542212309.pdf",
+          "document_binary_url": "http://dm-store-aat.service.core-compute-aat.internal/documents/3f03606d-3e59-4a65-96bd-1bf2ad6ec40f/binary"
+        },
+        "DocumentType": "petition",
+        "DocumentComment": null,
+        "DocumentFileName": "d8petition1618324542212309",
+        "DocumentDateAdded": null,
+        "DocumentEmailContent": null
+      }
+    },
+    {
+      "id": "94b4200f-541f-4619-8229-b09fdb844d9f",
+      "value": {
+        "DocumentLink": {
+          "document_url": "http://dm-store-aat.service.core-compute-aat.internal/documents/f349a46a-38db-49d5-be22-bcbd19138b38",
+          "document_filename": "aosinvitation1618324542212309.pdf",
+          "document_binary_url": "http://dm-store-aat.service.core-compute-aat.internal/documents/f349a46a-38db-49d5-be22-bcbd19138b38/binary"
+        },
+        "DocumentType": "aos",
+        "DocumentComment": null,
+        "DocumentFileName": "aosinvitation1618324542212309",
+        "DocumentDateAdded": null,
+        "DocumentEmailContent": null
+      }
+    }
+  ],
+  "PetitionerSolicitorFirm": "Best Sol Ltd",
+  "ReceivedAOSfromResp": null,
+  "ReceivedAosFromCoResp": null,
+  "SolStatementOfReconciliationDiscussed": "Yes",
+  "SolicitorAgreeToReceiveEmails": "Yes",
+  "D8PetitionerEmail": "petitioner@example.com",
+  "D8ReasonForDivorceBehaviourDetails": "Some bad behaviour",
+  "D8HelpWithFeesReferenceNumber": "HWF-123-456",
+  "CoRespLinkedToCase": null,
   "D8JurisdictionConnectionNewPolicy": [
     "E",
     "G",
@@ -29,31 +79,61 @@
     "B",
     "A"
   ],
-  "D8LegalProceedings": "No",
-  "D8MarriageDate": "2010-10-10",
-  "D8MarriageIsSameSexCouple": "No",
+  "D8DivorceUnit": "serviceCentre",
+  "D8DerivedRespondentCorrespondenceAddr": "123 Resp Road\nSW3 3SW",
   "D8MarriagePetitionerName": "Pet first last",
-  "D8MarriageRespondentName": "Resp first last",
-  "D8MarriedInUk": "Yes",
-  "D8PetitionerContactDetailsConfidential": "keep",
-  "D8PetitionerEmail": "petitioner@example.com",
-  "D8PetitionerFirstName": "Pet first name",
-  "D8PetitionerLastName": "Pet last name",
-  "D8PetitionerNameDifferentToMarriageCert": "No",
-  "D8PetitionerPhoneNumber": null,
-  "D8ReasonForDivorce": "unreasonable-behaviour",
-  "D8ReasonForDivorceBehaviourDetails": "Some bad behaviour",
-  "D8RespondentCorrespondenceSendToSol": "No",
-  "D8RespondentFirstName": "Resp first",
-  "D8RespondentLastName": "Resp last",
-  "D8RespondentNameAsOnMarriageCertificate": "No",
-  "D8SelectedDivorceCentreSiteId": "AA01",
-  "D8SolicitorReference": "11223344",
-  "DerivedPetitionerSolicitorAddr": "123 Judge Road\nSW1 1SW",
-  "PetitionerSolicitorEmail": "solicitor-personal-service@mailinator.com",
-  "PetitionerSolicitorFirm": "Best Sol Ltd",
-  "PetitionerSolicitorName": "Sol name",
   "PetitionerSolicitorPhone": "0011223344",
-  "SolicitorAgreeToReceiveEmails": "Yes",
-  "createdDate": "2019-08-08"
+  "NewLegalConnectionPolicy": "Yes",
+  "D8MarriageIsSameSexCouple": "No",
+  "D8FinancialOrder": "No",
+  "D8RespondentNameAsOnMarriageCertificate": "No",
+  "D8MarriageDate": "2010-10-10",
+  "D8caseReference": "EZ80D81234",
+  "D8DivorceWho": "wife",
+  "CoRespLinkedToCaseDate": null,
+  "SolPaymentHowToPay": "feesHelpWith",
+  "StatementOfReconciliationComments": null,
+  "D8RespondentFirstName": "Resp first",
+  "D8DocumentsUploaded": [],
+  "respondentSolicitorRepresented": "No",
+  "PetitionerOrganisationPolicy": {
+    "Organisation": {
+      "OrganisationID": "M2ZT9Q2",
+      "OrganisationName": "DivPetitionerSolicitorFirm"
+    },
+    "OrgPolicyReference": "11223344",
+    "OrgPolicyCaseAssignedRole": "[PETSOLICITOR]"
+  },
+  "SolUrgentCase": "No",
+  "CoRespEmailAddress": null,
+  "DerivedPetitionerSolicitorAddr": "123 Judge Road\nSW1 1SW",
+  "PetitionerSolicitorName": "Sol name",
+  "D8MarriedInUk": "Yes",
+  "AmendedCaseId": {
+    "CaseReference": "1618330606753591"
+  },
+  "D8PetitionerFirstName": "Pet first name",
+  "D8MarriageRespondentName": "Resp first last",
+  "D8PetitionerContactDetailsConfidential": "keep",
+  "D8LegalProceedings": "No",
+  "createdDate": "2021-04-13",
+  "D8MarriagePlaceOfMarriage": "United Kingdom",
+  "D8ReasonForDivorce": "unreasonable-behaviour",
+  "solApplicationFeeInPounds": "550",
+  "solApplicationFeeOrderSummary": {
+    "Fees": [
+      {
+        "id": "d638e875-c2ab-4455-9edf-25ce9a3d4288",
+        "value": {
+          "FeeCode": "FEE0002",
+          "FeeAmount": "55000",
+          "FeeVersion": "4",
+          "FeeDescription": "Filing an application for a divorce, nullity or civil partnership dissolution – fees order 1.2."
+        }
+      }
+    ],
+    "PaymentTotal": "55000",
+    "PaymentReference": null
+  },
+  "D8InferredPetitionerGender": "male"
 }
