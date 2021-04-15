@@ -95,7 +95,7 @@
   "StatementOfReconciliationComments": null,
   "D8RespondentFirstName": "Resp first",
   "D8DocumentsUploaded": [],
-  "respondentSolicitorRepresented": "No",
+  "respondentSolicitorRepresented": "Yes",
   "PetitionerOrganisationPolicy": {
     "Organisation": {
       "OrganisationID": "M2ZT9Q2",
@@ -103,6 +103,14 @@
     },
     "OrgPolicyReference": "11223344",
     "OrgPolicyCaseAssignedRole": "[PETSOLICITOR]"
+  },
+  "RespondentOrganisationPolicy": {
+    "Organisation": {
+      "OrganisationID": "3I4PJR6",
+      "OrganisationName": "DivRespondentSolicitorFirm"
+    },
+    "OrgPolicyReference": "32421",
+    "OrgPolicyCaseAssignedRole": "[RESPSOLICITOR]"
   },
   "SolUrgentCase": "No",
   "CoRespEmailAddress": null,

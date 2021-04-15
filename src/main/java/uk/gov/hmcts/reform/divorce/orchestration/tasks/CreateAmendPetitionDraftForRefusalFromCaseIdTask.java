@@ -31,6 +31,6 @@ public class CreateAmendPetitionDraftForRefusalFromCaseIdTask implements Task<Ma
                 context.getTransientObject(CASE_ID_JSON_KEY));
 
         context.setTransientObject(NEW_AMENDED_PETITION_DRAFT_KEY, amendDraft);
-        return amendDraft;
+        return amendDraft;//TODO - is resp policy here?
     }
 }

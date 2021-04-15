@@ -52,8 +52,8 @@ public class SolicitorAmendPetitionForRefusalTest extends CcdSubmissionSupport {
             .orElseThrow();
         CaseDetails amendedCaseDetails = retrieveCaseForCaseworker(solicitorUser, amendedCaseId);
         Map<String, Object> amendedCaseDetailsData = amendedCaseDetails.getData();
-        assertThat(amendedCaseDetailsData.get(PETITIONER_SOLICITOR_ORGANISATION_POLICY), is(notNullValue()));
-        assertThat(amendedCaseDetailsData.get(RESPONDENT_SOLICITOR_ORGANISATION_POLICY), is(notNullValue()));
+        assertThat("Amended case should have " + PETITIONER_SOLICITOR_ORGANISATION_POLICY, amendedCaseDetailsData.get(PETITIONER_SOLICITOR_ORGANISATION_POLICY), is(notNullValue()));
+        assertThat("Amended case should have " + RESPONDENT_SOLICITOR_ORGANISATION_POLICY, amendedCaseDetailsData.get(RESPONDENT_SOLICITOR_ORGANISATION_POLICY), is(notNullValue()));
     }
 
     private CcdCallbackResponse amendCase(String authToken, CaseDetails caseDetails) throws Exception {
