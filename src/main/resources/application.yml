@@ -153,6 +153,7 @@ feature-toggle:
     represented_respondent_journey: ${FEATURE_REPRESENTED_RESPONDENT_JOURNEY:false}
     bailiff_journey: ${FEATURE_BAILIFF_JOURNEY:false}
     feature_fee_pay_s2s_token: ${FEATURE_FEE_PAY_S2S_TOKEN:false}
+    pba_case_type: ${PBA_USING_CASE_TYPE:false}
 
 send-letter:
   url: ${SEND_LETTER_SERIVCE_BASEURL:http://localhost:4021}
