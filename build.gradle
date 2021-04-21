@@ -71,7 +71,7 @@ def versions = [
         springBoot                   : '2.3.4.RELEASE',//Upgrading to 2.3.9 makes build break because of embeddedPG and Flyway
         tomcat                       : '9.0.43',
         unirest                      : '1.4.9',
-        pact_version                 : '4.1.11',
+        pact_version                 : '4.1.8',
         httpComponents               : '4.5.13',
 ]
 
