@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.DefaultWorkflow;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.WorkflowException;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.task.Task;
+import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.task.TaskException;
 import uk.gov.hmcts.reform.divorce.orchestration.tasks.AddCourtsToPayloadTask;
 import uk.gov.hmcts.reform.divorce.orchestration.tasks.CreateAmendPetitionDraftTask;
 import uk.gov.hmcts.reform.divorce.orchestration.tasks.UpdateCaseInCCD;
@@ -28,16 +29,20 @@ public class AmendPetitionWorkflow extends DefaultWorkflow<Map<String, Object>> 
     private final AddCourtsToPayloadTask addCourtsToPayloadTask;
 
     public Map<String, Object> run(String caseId, String authToken) throws WorkflowException {
-        execute(
-            new Task[] {
-                amendPetitionDraft,
-                updateCaseInCCD
-            },
-            new HashMap<>(),
-            ImmutablePair.of(CASE_ID_JSON_KEY, caseId),
-            ImmutablePair.of(AUTH_TOKEN_JSON_KEY, authToken),
-            ImmutablePair.of(CASE_EVENT_ID_JSON_KEY, AMEND_PETITION)
-        );
+        try {
+            execute(
+                new Task[] {
+                    amendPetitionDraft,
+                    updateCaseInCCD
+                },
+                new HashMap<>(),
+                ImmutablePair.of(CASE_ID_JSON_KEY, caseId),
+                ImmutablePair.of(AUTH_TOKEN_JSON_KEY, authToken),
+                ImmutablePair.of(CASE_EVENT_ID_JSON_KEY, AMEND_PETITION)
+            );
+        }catch(TaskException e){
+            throw new WorkflowException("", e);
+        }
 
         Map<String, Object> newDraft = getContext().getTransientObject(NEW_AMENDED_PETITION_DRAFT_KEY);
 

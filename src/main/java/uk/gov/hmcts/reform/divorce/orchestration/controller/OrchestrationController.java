@@ -28,6 +28,7 @@ import uk.gov.hmcts.reform.divorce.orchestration.domain.model.exception.Authenti
 import uk.gov.hmcts.reform.divorce.orchestration.domain.model.payment.PaymentUpdate;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.WorkflowException;
 import uk.gov.hmcts.reform.divorce.orchestration.service.CaseOrchestrationService;
+import uk.gov.hmcts.reform.divorce.orchestration.service.CaseOrchestrationServiceException;
 import uk.gov.hmcts.reform.divorce.orchestration.service.FeatureToggleService;
 import uk.gov.hmcts.reform.divorce.orchestration.util.AuthUtil;
 import uk.gov.hmcts.reform.idam.client.models.UserDetails;
@@ -315,7 +316,7 @@ public class OrchestrationController {
             @RequestHeader(AUTHORIZATION_HEADER)
             @ApiParam(value = "JWT authorisation token issued by IDAM", required = true) final String authorizationToken,
             @PathVariable String caseId)
-            throws WorkflowException {
+            throws CaseOrchestrationServiceException {
 
         return ResponseEntity.ok(orchestrationService.amendPetition(caseId, authorizationToken));
     }

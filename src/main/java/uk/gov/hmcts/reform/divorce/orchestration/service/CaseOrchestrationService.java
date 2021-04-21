@@ -86,7 +86,7 @@ public interface CaseOrchestrationService {
     Map<String, Object> submitDaCase(Map<String, Object> divorceSession, String authorizationToken, String caseId)
         throws WorkflowException;
 
-    Map<String, Object> amendPetition(String caseId, String authorisation) throws WorkflowException;
+    Map<String, Object> amendPetition(String caseId, String authorisation) throws CaseOrchestrationServiceException;
 
     Map<String, Object> amendPetitionForRefusal(String caseId, String authorisation) throws WorkflowException;
 

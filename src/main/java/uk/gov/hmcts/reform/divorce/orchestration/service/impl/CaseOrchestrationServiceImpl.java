@@ -13,6 +13,7 @@ import uk.gov.hmcts.reform.divorce.orchestration.domain.model.ccd.CcdCallbackRes
 import uk.gov.hmcts.reform.divorce.orchestration.domain.model.document.template.DocumentType;
 import uk.gov.hmcts.reform.divorce.orchestration.domain.model.payment.PaymentUpdate;
 import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.WorkflowException;
+import uk.gov.hmcts.reform.divorce.orchestration.framework.workflow.task.TaskException;
 import uk.gov.hmcts.reform.divorce.orchestration.service.CaseOrchestrationService;
 import uk.gov.hmcts.reform.divorce.orchestration.service.CaseOrchestrationServiceException;
 import uk.gov.hmcts.reform.divorce.orchestration.util.AuthUtil;
@@ -630,13 +631,17 @@ public class CaseOrchestrationServiceImpl implements CaseOrchestrationService {
     }
 
     @Override
-    public Map<String, Object> amendPetition(String caseId, String authorisation) throws WorkflowException {
-        Map<String, Object> response = amendPetitionWorkflow.run(caseId, authorisation);
-        if (response != null) {
-            log.info("Successfully created a new draft to amend, and updated old case {}", caseId);
-        } else {
+    public Map<String, Object> amendPetition(String caseId, String authorisation) throws CaseOrchestrationServiceException {
+        Map<String, Object> response;
+        try {
+            response = amendPetitionWorkflow.run(caseId, authorisation);
+        } catch(WorkflowException e) {
             log.error("Unable to create new amendment petition for case {}", caseId);
+            throw new CaseOrchestrationServiceException(e);
         }
+
+        log.info("Successfully created a new draft to amend, and updated old case {}", caseId);
+
         return response;
     }
 
